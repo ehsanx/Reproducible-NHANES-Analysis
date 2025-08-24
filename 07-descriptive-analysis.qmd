@@ -1,0 +1,226 @@
+# Descriptive Analysis
+
+---
+
+This section presents the descriptive statistics of the final analytic cohort, providing an overview of participant characteristics. Cohort characteristics are summarized using weighted proportions and sample counts, accounting for the complex survey design of NHANES. This section aligns with the "Results" section of the paper, particularly referencing content related to Appendix Tables 1 and 2.
+
+This chapter will generate the following key descriptive tables:
+
+| Table Description | R Packages Used | Weighting | Purpose |
+| :--- | :--- | :--- | :--- |
+| **Unweighted Summary** | `tableone` | Unweighted | Initial exploration of raw sample counts. |
+| **Detailed Unweighted Tables** | `table1` | Unweighted | Visually appealing, detailed breakdowns of the cohort. |
+| [**Appendix Table 1**](07-descriptive-analysis.html#appendix-table-1-characteristics-by-mortality-status) | `survey` | **Weighted** | **Reproduces paper**: Participant characteristics by mortality status. |
+| [**Appendix Table 2**](07-descriptive-analysis.html#appendix-table-2-characteristics-by-smoking-initiation-exposure) | `survey` | **Weighted** | **Reproduces paper**: Participant characteristics by smoking exposure. |
+
+```{r setup, cache=TRUE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+  fig.path = "images/",
+  message = FALSE, 
+  warning = FALSE  
+)
+```
+
+```{r libraries, cache=TRUE}
+# Load required packages
+library(tableone) 
+library(table1)
+library(survey) 
+options(survey.want.obsolete=TRUE)
+require(knitr)
+require(kableExtra) 
+library(expss)
+```
+
+* R Code Chunk 1: Load Analytic Data and Survey Design
+
+We begin by loading the `dat.analytic2` and `dat.complete` datasets, and the final survey design object, `w.design0`. These are essential for generating accurate weighted descriptive statistics, as required for nationally representative results.
+
+```{r load, cache=TRUE}
+# Load the complete case analytic dataset
+load(file = "data/dat.analytic2.RData")
+load(file = "data/dat.complete.RData")
+
+# Load the subsetted survey design object
+w.design0 <- readRDS(file = "data/w.design0.rds")
+```
+
+---
+
+## Exploratory Analysis: Unweighted Summaries
+
+* R Code Chunk 2: Create Unweighted Descriptive Data Table
+
+The following code creates a basic unweighted descriptive data table, referred to as "Table 1", using the `CreateTableOne()` function from the `tableone` package. This table provides unweighted counts and percentages for our key variables, stratified by mortality status. While the paper's main results are based on weighted proportions, this unweighted table can be useful for initial data exploration and understanding the raw counts of variables within your specific analytic sample.
+
+```{r dataTable, cache=TRUE}
+# Unweighted Table 1 summarizing exposure, race, 
+# and sex, stratified by mortality status
+tab1 <- CreateTableOne(vars = c("exposure.cat", "race", "sex"),
+                                  strata = "status_all",
+                                  data = dat.analytic2, 
+                                  addOverall = TRUE,
+                                  test = TRUE)
+
+# View the summarized version of the table
+print(tab1$CatTable)
+```
+
+---
+
+* R Code Chunk 3: More Detailed Unweighted Tables
+
+The following code uses the `table1` package to generate more visually appealing unweighted descriptive tables. These tables offer flexibility in stratifying variables and are useful for detailed unweighted breakdowns of your cohort's characteristics, though they do not account for survey weights.
+
+**1. Create and Display Tables**
+
+The following code chunk demonstrates this by creating four different tables, each exploring a different combination of demographic variables, smoking exposure categories, and mortality status. Each table is then rendered as a clean HTML table using `table1::t1kable()`.
+
+```{r detailTables1, cache=TRUE, warning=FALSE, fig.cap="Unweighted: Smoking initiation categories stratified by race and mortality status."}
+
+# Table of exposure.cat stratified by race and mortality status
+tab11 <- table1::table1(~ exposure.cat | race * status_all , 
+                        data = dat.analytic2)
+# Display as a formatted HTML table in Quarto
+table1::t1kable(tab11)
+```
+
+```{r detailTables2, cache=TRUE, warning=FALSE, fig.cap="Unweighted: Smoking initiation categories stratified by sex and mortality status."}
+# Table of exposure.cat stratified by sex and mortality status
+tab12 <- table1::table1(~ exposure.cat| sex * status_all , 
+                        data = dat.analytic2)
+# Display as a formatted HTML table in Quarto
+table1::t1kable(tab12)
+```
+
+```{r detailTables3, cache=TRUE, warning=FALSE, fig.cap="Unweighted: Full cohort characteristics stratified by mortality status."}
+# Table of demographics and survey year stratified by mortality status
+tab13 <- table1::table1(~ exposure.cat + race + sex + year.cat |
+                          status_all , data = dat.analytic2)
+# Display as a formatted HTML table in Quarto
+table1::t1kable(tab13)
+```
+
+```{r detailTables4, cache=TRUE, warning=FALSE, fig.cap="Unweighted: Demographic characteristics stratified by smoking initiation category."}
+# Table of race and sex stratified by exposure.cat
+tab14 <- table1::table1(~ race + sex | exposure.cat , 
+                        data = dat.analytic2)
+# Display as a formatted HTML table in Quarto
+table1::t1kable(tab14)
+```
+
+**2. Save Tables to Excel (Optional)**
+
+The tables created with the `table1` package can also be saved to an external file, such as an Excel spreadsheet, for further review outside of this book. The following code demonstrates how to save two of these tables using the `expss` package.
+
+```{r saveTables, cache=TRUE}
+# Table 3
+t13 <- as.data.frame(tab13)
+expss::xl_write_file(t13, filename = "data/t13.xlsx")
+
+# Table 4
+t14 <- as.data.frame(tab14)
+expss::xl_write_file(t14, filename = "data/t14.xlsx")
+```
+
+---
+
+## Weighted Descriptive Statistics (Paper Reproduction)
+
+* R Code Chunk 4: Weighted Descriptive Tables
+
+The following code generates the primary descriptive tables for the analysis. Unlike the previous examples, these tables correctly account for the complex survey design by using the `svyCreateTableOne()` function on our survey design object (`w.design0`). This produces nationally representative, weighted percentages.
+
+### **Appendix Table 1: Characteristics by Mortality Status**
+
+This first table summarizes participant characteristics (smoking exposure, race, sex, and survey year), stratified by their mortality status. The output is designed to directly reproduce the results shown in Appendix Table 1 of the supplementary material where percentages were in brackets. Those percentages were calculated by accounting for sampling (interview) weights.
+
+```{r Table1, cache=TRUE, results='hide'}
+# Create weighted Table 1 
+# stratified by outcome status (all-cause mortality)
+tab13_weighted <- svyCreateTableOne(vars = c("exposure.cat", "race", 
+                                             "sex", "year.cat"),
+                                    strata = "status_all",
+                                    data = w.design0, # CRITICAL
+                                    addOverall = TRUE, 
+                                    test = TRUE)
+
+# Print the table with weighted proportions,
+# specified decimal places, and all factor levels
+tab13p_weighted <- print(tab13_weighted,
+                         format = "p",         
+                         catDigits = 2,        
+                         showAllLevels = TRUE, 
+                         smd = TRUE)     
+# Re-label
+colnames(tab13p_weighted)[colnames(tab13p_weighted) 
+                          == "0"] <- "Alive"
+colnames(tab13p_weighted)[colnames(tab13p_weighted) 
+                          == "1"] <- "Dead"
+# Order
+new_order <- c("level", "Alive", "Dead", 
+               "Overall", "p", "test", "SMD")
+# Apply the new order to the table object
+tab13p_weighted <- tab13p_weighted[, new_order]
+
+# Save the weighted table to CSV 
+write.csv(tab13p_weighted, file = "data/Table_App_1_Weighted_Mortality.csv")
+```
+
+```{r displayT1, cache=TRUE}
+# Display the formatted table using kable for a clean Quarto output
+kable(tab13p_weighted, caption = "Weighted Characteristics by 
+      All-Cause Mortality Status (Analogous to Appendix 
+      Table 1)") %>% 
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+### **Appendix Table 2: Characteristics by Smoking Initiation Exposure**
+
+This second table reproduces the results from Appendix Table 2 of the supplementary material. It summarizes the demographic characteristics (`race` and `sex`) of the cohort, stratified by the `exposure.cat` variable (smoking initiation categories). This provides the nationally representative, weighted demographic composition within each smoking exposure group as it accounts for the complex survey design.
+
+```{r Table2, cache=TRUE, results='hide'}
+# Create weighted Table 2 stratified by smoking initiation categories
+tab14_weighted <- svyCreateTableOne(vars = c("race", "sex"),
+                                    strata = "exposure.cat",
+                                    data = w.design0, # CRITICAL
+                                    addOverall = TRUE,
+                                    test = TRUE)
+
+# Print the table with weighted proportions 
+# and specified decimal places
+tab14p_weighted <- print(tab14_weighted,
+                         format = "p",
+                         catDigits = 2,
+                         showAllLevels = TRUE,
+                         smd = TRUE)
+
+# Define the desired column order
+new_order_t2 <- c("level", "Never smoked", "Started before 10", 
+                  "Started at 10-14", "Started at 15-17", 
+                  "Started at 18-20", "Started after 20", 
+                  "Overall", "p", "test", "SMD")
+# Apply the new order to the table object
+tab14p_weighted <- tab14p_weighted[, new_order_t2]
+
+# Save the weighted table to CSV
+write.csv(tab14p_weighted, file = "data/Table_App_2_Weighted_Exposure.csv")
+```
+
+```{r displayT2, cache=TRUE}
+# Display the formatted table using kable for a clean Quarto output
+kable(tab14p_weighted, caption = "Weighted Characteristics by 
+      Smoking Initiation Categories (Analogous to Appendix 
+      Table 2)") %>% 
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+This completes the descriptive analysis section of the statistical analysis stage.
+
+---
+
+## Chapter Summary and Next Steps
+
+In this chapter, we generated the primary descriptive statistics for the study cohort. By using the survey design object, we successfully reproduced the weighted characteristics of the participants, creating tables analogous to Appendix Tables 1 and 2 from the paper's supplementary material. This gives us a clear, nationally representative picture of our study population.
+
+Now that we understand the characteristics of our cohort, we will move on to the core analysis in the next chapter, "Survival Analysis," where we will investigate the primary relationship between smoking initiation and mortality.

@@ -1,0 +1,238 @@
+# Survival Analysis
+
+---
+
+This section performs the main survival analyses to investigate the association between early smoking initiation and all-cause mortality. We will first visualize survival probabilities using Kaplan-Meier curves and then estimate hazard ratios (HRs) with survey-weighted Cox Proportional Hazards models. This section directly reproduces the "Statistical Analysis" and "Results" sections of the published paper. Specifically, Figure 1 (Kaplan-Meier curve) and Figure 2 (the crude/adjusted HRs) of the original paper.
+
+This chapter will reproduce the paper's core survival analyses using the following methods:
+
+| Analysis/Visualization | Key R Function(s) | Purpose | Reproduces |
+| :--- | :--- | :--- | :--- |
+| **Kaplan-Meier Curve** | `svykm()`, `svylogrank()` | Visualize and test differences in survival probabilities between exposure groups. | **Figure 1** |
+| **Crude Cox Model** | `svycoxph()` | Estimate the unadjusted association between smoking initiation and mortality. | **Figure 2** (Crude HRs) |
+| **Adjusted Cox Model** | `svycoxph()` | Estimate the association while controlling for confounders (sex, race, survey year). | **Figure 2** (Adjusted HRs) |
+
+
+```{r setup, cache=TRUE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+  fig.path = "images/",
+  message = FALSE, 
+  warning = FALSE, 
+  cache = TRUE
+)
+```
+
+```{r libraries, cache=TRUE}
+# Load required packages
+library(Publish) 
+library(survey) 
+options(survey.want.obsolete=TRUE)
+library(survival)
+require(knitr)
+require(kableExtra)
+require(stringr)
+```
+
+---
+
+* R Code Chunk 1: Load Data and Survey Design Object
+
+We begin by loading the final, complete-case analytic dataset (`dat.complete`) and the survey design object (`w.design0`) that were created in the previous chapters. The `w.design0` object is essential for ensuring our analysis accounts for the complex NHANES survey design.
+
+```{r load, cache=TRUE}
+# Load the complete case analytic dataset
+load(file = "data/dat.complete.RData")
+
+# Load the subsetted survey design object
+w.design0 <- readRDS(file = "data/w.design0.rds")
+
+# Verify the dimensions of the loaded survey design object
+dim(w.design0)
+```
+
+---
+
+## Kaplan-Meier Survival Analysis (Figure 1)
+
+* R Code Chunk 2: Kaplan-Meier Curves and Log-Rank Test
+
+**Kaplan-Meier Curves**
+
+The following code visualizes the survival probabilities over time using Kaplan-Meier (KM) curves, stratified by the `exposure.cat` (age at smoking initiation) variable. The KM curves illustrate the proportion of participants surviving over their follow-up time from birth. The `svykm()` function from the `survey` package is used to calculate the survival estimates while accounting for the complex survey design. The resulting plot reproduces the trends shown in Figure 1 of the original paper.
+
+```{r KM, cache=TRUE,  fig.cap="Survey-weighted Kaplan-Meier curves for all-cause mortality, stratified by age of smoking initiation (reproduces Figure 1 from the paper)."}
+
+# Define the survival formula
+formulax0 <- as.formula(Surv(stime.since.birth, status_all) 
+                        ~ exposure.cat)
+
+# Calculate survey-weighted Kaplan-Meier curves
+sA <- svykm(formulax0, design = w.design0)
+saveRDS(sA, file = "data/sA.rds")
+
+# Dynamically set the number of colors for the legend
+dummy <- length(unique(as.factor(w.design0$variables$exposure.cat)))
+
+# Plot the Kaplan-Meier curves
+plot(sA, pars = list(col = c(1:dummy)),
+     xlab = "Time",
+     ylab = "Proportion surviving",
+     main = "Survey-featured Kaplan-Meier Curve:
+     All-Cause Mortality")
+legend("bottomleft", 
+       levels(as.factor(w.design0$variables$exposure.cat)),
+       col = (1:dummy), lty = c(1,1),
+       bty = "n")
+
+```
+
+**Log-Rank Test**
+
+After plotting the curves, a survey-weighted log-rank test is performed using `svylogrank()` to statistically determine if there are significant differences in survival curves among the exposure groups. A significant p-value from this test would indicate a statistically significant difference in survival experiences between the age groups of smoking initiation. The paper states that the log-rank test was significant.
+
+```{r log-rank, cache=TRUE}
+# Perform the survey-weighted log-rank test
+lrt <- svylogrank(formulax0, design = subset(w.design0, 
+                                             survey.weight.new > 0))
+
+# Display the rounded p-value from the log-rank test
+round(lrt[[2]],2)
+```
+
+To present these results more formally, the following code uses `knitr::kable()` to display the full test output, including the Chi-squared statistic and degrees of freedom, in a clean table.
+
+```{r logrank-Results, cache=TRUE}
+kable(lrt[[1]],
+      booktabs = TRUE, digits = 2,
+      col.names = c("Test Statistic", "Standard Error", "Z-value", "p-value"),
+      caption="Survey-weighted log-rank test for main analysis comparing survival distributions by age of smoking initiation.") %>%
+  kable_styling(latex_options = "hold_position")
+
+```
+
+---
+
+## Cox Proportional Hazards Models (Figure 2)
+
+### Unadjusted Model (Crude HRs)
+
+* R Code Chunk 3: Unadjusted Cox Model (for Comparison)
+
+The following code demonstrates a standard, un-weighted Cox proportional hazards model using base R's `coxph()` function on the `dat.complete` dataset. This model does not account for the complex survey design of NHANES and is included as a baseline, primarily for comparison or to understand how unweighted models would be run. The `publish()` function is used to format the model output for easier interpretation.
+
+```{r unadjustedModel, cache=TRUE}
+# Fit an un-weighted Cox Proportional Hazards model
+fit0 <- coxph(Surv(stime.since.birth, status_all) ~ exposure.cat, 
+              data = dat.complete)
+
+# Use 'publish' to format the output for display
+publish(fit0)
+```
+
+---
+
+* R Code Chunk 4: Unadjusted Survey-Weighted Cox Proportional Hazards Model
+
+The following code fits the unadjusted Cox proportional hazards model, but it uses `svycoxph()` from the `survey` package to account for the complex NHANES survey design. This model examines the crude association between smoking initiation categories and all-cause mortality, producing Hazard Ratios. The `publish()` function is used to format the model output for easier interpretation. The HRs from this model contribute to the "Crude" estimates shown in Figure 2 of the paper.
+
+```{r unadjusted-survey, cache=TRUE}
+# Fit the unadjusted survey-weighted Cox Proportional Hazards model
+fit0 <- svycoxph(Surv(stime.since.birth, status_all) ~ exposure.cat, 
+                 design = w.design0)
+
+# Use 'publish' to format the output for display
+f0 <- publish(fit0) 
+```
+
+---
+
+* R Code Chunk 5: Process Unadjusted Hazard Ratios for Plotting
+
+The output from `publish()` is a formatted table, but for plotting, we need a clean data frame of the results.
+
+The following code extracts the Hazard Ratios and their 95% Confidence Intervals from the unadjusted survey-weighted Cox Model (`f0`). The `stringr` package is used to parse the confidence interval strings into separate lower and upper bound numeric columns.
+
+```{r unadjustedHRs, cache=TRUE}
+# Select HR and CI columns for exposure categories from 'f0'
+f0r <- f0$regressionTable[2:6,c("HazardRatio","CI.95")] 
+
+# Add a 'group' column to label these results as "Crude" for plotting
+f0r$group <- "Crude"
+
+# Extract lower and upper bounds from the CI string
+ci <- str_extract_all(f0r[,2], '\\d+([.,]\\d+)?', simplify = TRUE)
+f0r$CI.l <- as.numeric(as.character(ci[,1])) # Lower bound
+f0r$CI.u <- as.numeric(as.character(ci[,2])) # Upper bound
+
+# Rename columns for consistency in plotting
+names(f0r) <- c("mean","CI.95","group","lower","upper")
+
+# Display the processed data frame
+f0r
+```
+
+---
+
+### Adjusted Model (Adjusted HRs)
+
+* R Code Chunk 6: Adjusted Survey-Weighted Cox Proportional Hazards Model
+
+The following code fits the adjusted Cox proportional hazards model, accounting for the complex survey design and controlling for **key covariates**. As described in the paper, the model is adjusted to account for **sex, race/ethnicity, and survey cycle**. This model estimates the adjusted Hazard Ratios, which contribute to the "Adjusted" estimates shown in Figure 2 of the paper.
+
+```{r adjusted-survey, cache=TRUE}
+# Fit the adjusted survey-weighted Cox Proportional Hazards model
+fit1 <- svycoxph(Surv(stime.since.birth, status_all) ~ exposure.cat + 
+                   sex + race + year.cat, design = w.design0)
+
+# Use 'publish' to format the output for display
+f1 <- publish(fit1) # Store the published output
+```
+
+---
+
+* R Code Chunk 7: Process Adjusted Hazard Ratios for Plotting
+
+The following code follows the similar processing done for the unadjusted model, but applies it to the results of the adjusted survey-weighted Cox model.
+
+```{r adjustedHRs, cache=TRUE}
+# Select Hazard Ratio and CI columns for exposure categories from 'f1'
+f1r <- f1$regressionTable[2:6,c("HazardRatio","CI.95")]
+
+# Add a 'group' column to label these results as "Adjusted"
+f1r$group <- "Adjusted"
+
+# Extract lower and upper bounds from the CI string
+ci <- str_extract_all(f1r[,2], '\\d+([.,]\\d+)?', simplify = TRUE)
+f1r$CI.l <- as.numeric(as.character(ci[,1]))
+f1r$CI.u <- as.numeric(as.character(ci[,2]))
+
+# Rename columns for consistency in plotting
+names(f1r) <- c("mean","CI.95","group","lower","upper")
+
+# Display the processed data frame
+f1r 
+```
+
+---
+
+## Saving Model Results
+
+* R Code Chunk 8: Save Processed Results
+
+Finally, we save the two processed data frames (`f0r` and `f1r`) containing the crude and adjusted results. These files will be loaded in the next section to create the plot that visualizes these findings (Figure 2 of paper).
+
+```{r save-df, cache=TRUE}
+# Save the processed HR data frames for the next chapter
+saveRDS(f0r, file = "data/f0r.rds")
+saveRDS(f1r, file = "data/f1r.rds")
+```
+
+This completes the survival analysis section of the statistical analysis stage.
+
+---
+
+## Chapter Summary and Next Steps
+
+We have now completed the main survival analysis. We successfully reproduced the Kaplan-Meier curves (Figure 1 from the paper) to visualize survival probabilities and fitted both crude and adjusted survey-weighted Cox models to estimate the hazard ratios, replicating the core findings presented in Figure 2.
+
+The results show a clear association between early smoking initiation and mortality. The next logical step, covered in the "Effect Modification Analysis" chapter, is to investigate whether this association differs across key demographic groups.

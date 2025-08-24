@@ -1,0 +1,95 @@
+project:
+  type: book
+  output-dir: docs
+execute:
+    freeze: auto
+
+book:
+  title: "Analyzing Early Smoking Initiation and Mortality"
+  subtitle: "A Complete Walkthrough with 20 Years of NHANES Data" # Added a subtitle for more context
+  author: 
+    - name: M Ehsan Karim
+      affiliation: School of Population and Public Health, The University of British Columbia
+      url: https://ehsank.com/
+    - name: Sadia Khan Durani
+      affiliation: Department of Statistics, The University of British Columbia
+  date: last-modified # Automatically updates the date
+  cover-image: "images/su.png" # Add a cover image file to your project
+  cover-image-alt: "A conceptual image representing data analysis and public health."
+
+  # Navigation and Repository Links
+  navbar:
+    title: "NHANES Mortality Analysis"
+    logo: "images/ubc_logo.png" # Add a small logo image
+    #right:
+    #  - icon: github # Link to your GitHub repo
+    #    href: https://github.com/your-repo/link-here 
+    #  - text: "About the Author"
+    #    href: https://spph.ubc.ca/faculty/ehsan-karim/ # Link to your website or profile
+
+  # Chapter Listing (remains the same)
+  chapters:
+    - index.qmd
+    - part: "Introduction and Background"
+      chapters:
+        - 01-overview.qmd
+        - 02-nhanes-overview.qmd
+    - part: "Data Preparation"
+      chapters:
+        - 03a-download-merge.qmd
+        - 03b-mortality-merge.qmd
+        - 04-variable-cleaning.qmd
+        - 05-cohort-definition.qmd
+    - part: "Statistical Analysis"
+      chapters:
+        - 06-survey-design.qmd
+        - 07-descriptive-analysis.qmd
+        - 08-survival-analysis.qmd
+        - 09-effect-modification.qmd
+        - 10-sensitivity-analysis.qmd
+    - part: "Discussion"
+      chapters:
+        - 11-discussion.qmd
+        - 12-limitations-future.qmd
+    - appendices.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+# HTML Output Format Enhancements
+format:
+  html:
+    theme:
+      light: zephyr # A clean, modern light theme
+      dark: darkly # A corresponding dark theme
+    mainfont: "Lato" # Using a Google Font for better typography
+    fontsize: 1.1em
+    toc: true
+    toc-depth: 3
+    code-fold: true # Changed to true to let users expand code
+    code-summary: "Show/Hide Code"
+    code-overflow: scroll # Changed to scroll for cleaner code blocks
+    code-copy: hover
+    code-line-numbers: true
+    code-link: true
+    df-print: paged
+
+# PDF Output Format (Optional but professional)
+  pdf:
+    documentclass: scrreprt
+    papersize: letter
+    toc: true
+    number-sections: true
+    colorlinks: true
+
+prefer-html: true
+
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>" 
+    R.options:
+      knitr.graphics.auto_pdf: true
+
+editor: visual
+        

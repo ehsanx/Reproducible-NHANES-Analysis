@@ -1,0 +1,277 @@
+# Variable Definitions and Cleaning
+
+---
+
+This section continues the data preparation process using the combined NHANES and mortality dataset created in the previous section, `dat.full.with.mortality`. Here, we will construct the final variables required for our survival analysis. This includes defining the exposure, outcome, and follow-up time, as well as creating the final analytic dataset by applying inclusion criteria and handling missing data.
+
+```{r setup, cache=TRUE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+  fig.path = "images/"
+)
+```
+
+```{r libraries, cache=TRUE}
+# Load required packages
+library(car)
+library(DataExplorer)
+```
+
+---
+
+* R Code Chunk 1: Load Complete Merged Data
+
+The following code begins by loading the `dat.full.with.mortality.RDS` file. This dataset is the complete, merged result from the previous chapter, containing the processed demographic, smoking, and mortality data for all participants. The `readRDS()` function loads the file from the `data/` directory, and the `colnames()` function is used to display the names of all its columns.
+
+```{r readmerged, cache=TRUE}
+# Load previous data file
+dat.full.with.mortality <- 
+  readRDS("data/dat.full.with.mortality.RDS")
+
+colnames(dat.full.with.mortality)
+```
+
+---
+
+## Creating Key Analysis Variables
+
+* R Code Chunk 2: Variable Construction
+
+This section details the construction of the key variables essential for our survival analysis. This includes defining the exposure variable (age at smoking initiation), the survival outcome, and the follow-up time.
+
+**1. Exposure Variable: Age at Smoking Initiation Categories (exposure.cat)**
+
+The following code creates the primary exposure variable for our analysis, `exposure.cat`. The numeric `smoking.age` variable (`SMD030` from NHANES) is categorized into six levels based on age ranges used in the original paper. This categorization is based on established age ranges for smoking initiation used in previous research, and aims to capture distinct developmental and addiction risk profiles. We first inspect the raw distribution of `smoking.age` before using `car::recode()` to create the new factor and explicitly setting the level order to ensure "Never smoked" is the reference category.
+
+```{r var_construction, cache=TRUE}
+# Display initial distribution of raw smoking.age
+table(dat.full.with.mortality$smoking.age, useNA = "always")
+
+# Recode smoking.age into categorical exposure.cat
+dat.full.with.mortality$exposure.cat <- car::recode(
+dat.full.with.mortality$smoking.age, "
+0 = 'Never smoked'; 1:9 = 'Started before 10'; 
+10:14 = 'Started at 10-14'; 15:17 = 'Started at 15-17'; 
+18:20 = 'Started at 18-20'; 21:80 = 'Started after 20'; 
+else = NA ", as.factor = TRUE)
+
+# Explicitly set the order of factor levels
+dat.full.with.mortality$exposure.cat <- 
+  factor(dat.full.with.mortality$exposure.cat,
+         levels = c("Never smoked", 'Started before 10',
+                    'Started at 10-14', "Started at 15-17",
+                    "Started at 18-20", "Started after 20"))
+
+```
+
+The following tables are used to inspect the distribution of the newly created exposure variable, both overall and broken down by mortality status.
+
+```{r tables, cache=TRUE}
+# Display distributions of the newly created exposure variable
+table(dat.full.with.mortality$exposure.cat, useNA = "always")
+
+
+# Display distributions of exposure.cat level
+# broken down by mort_stat variable
+table(dat.full.with.mortality$exposure.cat,
+      dat.full.with.mortality$mort_stat, useNA = "always")
+
+```
+
+**2. Outcome and Follow-up Time Variables**
+
+The following code constructs the variables for the survival analysis. As noted in the original paper, the time of birth is designated as the baseline to prevent differential start times for exposed and unexposed participants. The primary survival outcome is therefore the time from birth to all-cause mortality. Specifically, this is calculated by combining the participant's age at the interview (from the RIDAGEYR variable) with their mortality follow-up time from the interview date (from the PERMTH_INT variable). We also define the `status_all` variable from the raw mortality data to indicate the participant's final mortality status.
+
+```{r survivalVar, cache=TRUE}
+# Survival time Person-Months of Follow-up from Interview date
+# (PERMTH_INT)
+dat.full.with.mortality$stime.since.interview <- 
+  dat.full.with.mortality$mort_permth_int 
+summary(dat.full.with.mortality$stime.since.interview) 
+
+
+# Age in month at NHANES interview 
+# (RIDAGEYR)
+dat.full.with.mortality$age.month <- dat.full.with.mortality$age * 12
+summary(dat.full.with.mortality$age.month)
+
+
+# Survival time - Person-Months of Follow-up from birth = age at 
+# screening (months) + person-months of follow-up from interview.
+# This combines the age at interview with the time from interview 
+# to death or end of follow-up.
+dat.full.with.mortality$stime.since.birth <- 
+  with(dat.full.with.mortality, age.month + stime.since.interview)
+
+
+# Convert to years for consistent interpretation with age
+dat.full.with.mortality$stime.since.birth <- dat.full.with.mortality$stime.since.birth/12
+
+
+# Ensure NA values are consistent if stime.since.interview was NA
+dat.full.with.mortality$stime.since.birth[
+  is.na(dat.full.with.mortality$stime.since.interview)] <- NA
+summary(dat.full.with.mortality$stime.since.birth)
+
+
+# All-cause mortality status (PRIMARY outcome)
+dat.full.with.mortality$status_all <- 
+  dat.full.with.mortality$mort_stat
+table(dat.full.with.mortality$status_all, useNA = "always")
+
+```
+
+**3. Final Variable Cleaning**
+
+The following code drops mortality-related variables not needed for the final analytic dataset.
+
+```{r dropVar, cache=TRUE}
+# Remove unneeded columns
+dat.full.with.mortality$mort_diabetes <- NULL
+dat.full.with.mortality$mort_hyperten <- NULL
+dat.full.with.mortality$mort_permth_int <- NULL
+dat.full.with.mortality$mort_permth_exm <- NULL
+dat.full.with.mortality$mort_ucod_leading <- NULL
+dat.full.with.mortality$mort_eligstat <- NULL
+```
+
+**4. Recoding Survey Year: year.cat**
+
+The `year` variable, representing the NHANES survey cycle is recoded into a more descriptive categorical variable, `year.cat`.
+
+```{r recoding_year, cache=TRUE}
+# Recode year variable into a factor with descriptive labels
+dat.full.with.mortality$year.cat <- dat.full.with.mortality$year
+
+new_levels <- c(
+  "1999-2000", "2001-2002", "2003-2004", 
+  "2005-2006", "2007-2008", "2009-2010",
+  "2011-2012", "2013-2014", "2015-2016",
+  "2017-2018"
+)
+
+levels(dat.full.with.mortality$year.cat) <- new_levels
+
+# Display the unique levels of the new year.cat variable
+levels(dat.full.with.mortality$year.cat)
+```
+
+---
+
+## Constructing the Final Analytic Cohort
+
+* R Code Chunk 3: Final Analytic Dataset Construction
+
+The following code creates the final analytic dataset by applying the specific inclusion and exclusion criteria used in the published paper. The two main steps are restricting the participant age range to 20–79 years and performing a complete-case analysis by excluding observations with missing data for key variables.
+
+**1. Apply Age and Variable Exclusions**
+
+First, we apply the age restriction, keeping only participants between 20 and 79 years old. We also drop several intermediate or raw variables that are no longer needed for the final analysis. We will remove the `smoked.while.child` variable. While this variable was created as a simple binary indicator for early smoking, the final analysis relies on the more granular, multi-level `exposure.cat` variable.
+
+::: {.callout-note}
+The `exposure.cat` variable (e.g., 'Started before 10', 'Started at 10-14') is superior for our research question because it allows us to investigate a dose-response relationship—that is, to see if the risk of mortality changes incrementally with different ages of initiation. A simple binary variable like `smoked.while.child` would only allow us to compare "early starters" to everyone else, masking the important nuances in risk across different age groups. Therefore, it is excluded from the final analytic dataset.
+:::
+
+```{r age, cache=TRUE}
+# Drop the following column not being used
+dat.full.with.mortality$smoked.while.child <- NULL 
+
+### Analytic Dataset - age 20 - 79
+
+# Inclusion criteria: adults aged between 20 and 79 years
+dat.analytic <- subset(dat.full.with.mortality, age>=20 & age < 80)
+
+# Dimensions before age filtering
+dim(dat.full.with.mortality)
+
+# Dimensions after age filtering
+dim(dat.analytic)
+
+# Calculate number of participants dropped due to age restriction
+dim(dat.full.with.mortality)[1] - dim(dat.analytic)[1]
+```
+
+Drop other variables that are not being used in the final analysis.
+
+```{r drop, cache=TRUE}
+dat.analytic$born <- NULL
+dat.analytic$age <- NULL
+dat.analytic$age.month <- NULL
+
+# Dimension
+dim(dat.analytic) 
+```
+
+**2. Apply Complete-Case Analysis**
+
+Next, we exclude participants who have missing data for the primary outcome (survival time) or the primary exposure (smoking initiation category). This is consistent with the original paper, which notes that about 0.5% of the sample (275 observations) was discarded for this reason. Also, there were no missing values in the covariates variables considered in the main analysis.
+
+```{r exposure/outcome, cache=TRUE}
+# Participants with incomplete data on smoking status 
+# or mortality were excluded
+dat.analytic1 <- dat.analytic[
+  complete.cases(dat.analytic$stime.since.birth),]
+dim(dat.analytic1) # Dimension after removing missing survival time
+
+dat.analytic2 <- dat.analytic1[
+  complete.cases(dat.analytic1$exposure.cat),]
+dim(dat.analytic2) # Dimension after removing missing exposure var
+
+# Complete case analysis: remove missing values in covariates
+dat.complete <- na.omit(dat.analytic2) # No missing values
+dim(dat.complete)
+
+```
+
+```{r profile-missing-plot, cache=TRUE}
+#| label: profile-missing
+#| fig.cap: "Profile of missing data after removing participants with missing outcome or exposure. This table confirms that no missing values remain in the key covariates."
+
+# Profile missingness after initial filtering
+profile_missing(dat.analytic2)
+```
+
+**3. Reconcile Sample Sizes** The following code calculates the number of participants dropped at each stage of the filtering process. This helps confirm that our data cleaning has resulted in the same final sample size as the original study.
+
+```{r num_dropped, cache=TRUE}
+# Participants dropped - overall
+nrow(dat.full.with.mortality) - nrow(dat.complete)
+
+# Participants dropped - due to missing exposure or outcome
+nrow(dat.analytic) - nrow(dat.analytic2)
+
+# Participants dropped - due to missing covariates
+nrow(dat.analytic2) - nrow(dat.complete)
+```
+
+---
+
+## Exporting Final Datasets
+
+* R Code Chunk 4: Save Final Datasets
+
+The final step is to save our processed datasets. We save three different versions of the data to create useful checkpoints for the analysis:
+
+-   `dat.full.with.mortality.RData`: The updated, merged dataset before any filtering was applied in this chapter.
+-   `dat.analytic2.RData`: The dataset after applying age restrictions and removing participants with missing outcome or exposure data.
+-   `dat.complete.RData`: The final, clean analytic dataset containing only complete cases.
+
+```{r save, cache=TRUE}
+# Save
+save(dat.full.with.mortality, 
+     file = "data/dat.full.with.mortality.RData")
+
+save(dat.analytic2, 
+     file = "data/dat.analytic2.RData")
+
+save(dat.complete, 
+     file = "data/dat.complete.RData")
+
+```
+
+This completes the variable definitions and cleaning part of the data preparation stage.
+
+## Chapter Summary and Next Steps
+
+In this chapter, we constructed the core variables for the analysis, including the categorized smoking initiation exposure (`exposure.cat`) and the survival outcome (time from birth to all-cause mortality). We then applied the study's inclusion and exclusion criteria to create the final, complete-case analytic dataset with 50,549 participants, matching the sample size of the original paper.
+
+With a clean dataset ready, the next chapter, "Cohort Definition," will formally summarize the criteria used to define our study population.

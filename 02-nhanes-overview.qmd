@@ -1,0 +1,47 @@
+# NHANES Data Overview
+
+---
+
+This section provides an overview of the National Health and Nutrition Examination Survey (NHANES) program, the primary data source for this analysis. We will cover the survey's design, its core methodology, and the crucial process of linking participant data with national mortality records.
+
+## Description of NHANES 📊
+
+NHANES is a continuous program of studies run by the Centers for Disease Control and Prevention (CDC) that began in the 1960s. It is designed to assess the health and nutritional status of the U.S. population. Since 1999, the program has been conducted in 2-year cycles. Further details about the program can be found on the main [NHANES website at the CDC](https://www.cdc.gov/nchs/nhanes/).
+
+### Why NHANES for this study?
+
+-   **National Representativeness**: NHANES uses a complex, multi-stage probability sampling design to be representative of the entire noninstitutionalized U.S. civilian population.
+-   **Rich Data**: It collects a wide range of data through interviews, physical examinations, and laboratory tests.
+-   **Public Availability**: The data files are publicly available online, which allows researchers to easily retrieve and use the data, promoting transparency and reproducibility.
+
+This study utilizes data from 10 consecutive cycles spanning **1999-2018**, providing a robust, long-term dataset for analysis.
+
+## Survey Design 🏗️
+
+The NHANES survey design is complex and must be accounted for in any analysis to produce valid, generalizable results. The procedure involves four main stages:
+
+1.  **Stage 1: Primary Sampling Units (PSUs)** - PSUs, which are mostly counties, are selected with a higher probability for more populated areas.
+2.  **Stage 2: Segments within PSUs** - Each PSU is divided into smaller geographic areas (like city blocks), and a sample of these segments is drawn.
+3.  **Stage 3: Households within Segments** - A sample of households is chosen, with over-sampling of certain populations (e.g., low-income persons, specific racial/ethnic groups) to ensure sufficient numbers for meaningful analysis.
+4.  **Stage 4: Individuals within Households** - Individuals are randomly selected from within the chosen households.
+
+The CDC provides detailed documentation on how to correctly analyze this complex survey data. More information can be found in the [NHANES Analytic Guidelines](https://wwwn.cdc.gov/nchs/nhanes/analyticguidelines.aspx).
+
+::: {.callout-note}
+### Why This Matters
+
+This multi-stage design requires the use of special **survey weights, strata, and PSU variables** in any statistical analysis. **Ignoring these design elements would lead to biased estimates and incorrect standard errors**, potentially invalidating the study's conclusions.
+:::
+
+## Mortality Linkage 🔗
+
+A key advantage of NHANES is the ability to link participant data with the **National Death Index (NDI)**. The NCHS periodically performs this linkage to create public-use **Linked Mortality Files (LMF)**, which provide mortality follow-up information for adult participants. The official Public-use Linked Mortality Files are available from the [NCHS Data Linkage Program](https://ftp.cdc.gov/pub/Health_Statistics/NCHS/datalinkage/linked_mortality/).
+
+
+Key variables from the LMF used in this analysis include:
+
+-   **Mortality Status (`MORTSTAT`)**: Indicates whether a participant is deceased or presumed alive at the end of the follow-up period.
+-   **Follow-up Time (`PERMTH_INT`)**: The duration, in months, from the participant's survey interview date until the date of death or the end of the follow-up period.
+
+By incorporating this mortality data, the cross-sectional NHANES survey is effectively transformed into a **prospective cohort study**. This powerful feature allows us to link baseline characteristics collected at the time of the survey to long-term health outcomes like all-cause mortality, which is the foundation of our research question.
+        

@@ -1,0 +1,79 @@
+# Reproducing Tables
+
+-   Summary tables
+-   Appendix tables
+
+The following section reproduced all tables presented in the original published paper.
+
+
+
+## R Code Chunk 4: Reproducing Appendix Figures
+
+```{r setup, cache=TRUE, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  cache = TRUE
+)
+```
+
+```{r libraries, cache=TRUE}
+# Load required packages
+library(readr)
+library(car)
+library(dplyr)
+library(DataExplorer)
+library(tableone) # For CreateTableOne and svyCreateTableOne
+library(Publish)
+library(survey)
+options(survey.want.obsolete=TRUE)
+library(survival)
+require(knitr)
+require(kableExtra) # For kable and kable_styling
+library(stringr)
+library(expss) # For xl_write_file if re-exporting tables
+library(readxl) # For reading tables from Excel if needed
+library(table1) # If using table1 package for specific table formats
+
+```
+
+## R Code Chunk 1: Load Necessary Objects
+
+```{r load, cache=TRUE}
+
+# Load the complete case analytic dataset
+if (!file.exists("data/dat.complete.RData")) {
+  message("dat.complete.RData not found. Some table reproductions might be affected.")
+} else {
+  load(file = "data/dat.complete.RData")
+}
+
+# Load the survey design object
+if (!file.exists("data/w.design0.rds")) {
+  stop("Error: 'data/w.design0.rds' not found. Please ensure 08-survival-analysis.qmd has been rendered successfully first.")
+}
+w.design0 <- readRDS(file = "data/w.design0.rds")
+
+# Load descriptive table objects 
+if (!file.exists("data/tab1_outcome_overall.rds")) {
+  message("tab1_outcome_overall.rds not found. Appendix Table 1 cannot be reproduced from file. Consider generating/saving in Chapter 7.")
+  tab1_outcome_overall <- NULL # Placeholder
+} else {
+  tab1_outcome_overall <- readRDS("data/tab1_outcome_overall.rds")
+}
+
+if (!file.exists("data/tab1_exposure_overall.rds")) {
+  message("tab1_exposure_overall.rds not found. Appendix Table 2 cannot be reproduced from file. Consider generating/saving in Chapter 7.")
+  tab1_exposure_overall <- NULL # Placeholder
+} else {
+  tab1_exposure_overall <- readRDS("data/tab1_exposure_overall.rds")
+}
+
+```
+
+<!-- ```{r , cache=TRUE} -->
+
+<!-- # -->
+
+<!-- ``` -->

@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Analyzing Early Smoking Initiation and Mortality - 4&nbsp; Data Download and Merging</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./03b-mortality-merge.html" rel="next">
+<link href="./02-nhanes-overview.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+</head>
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/ubc_logo.png" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">NHANES Mortality Analysis</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools ms-auto">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03a-download-merge.html">Data Preparation</a></li><li class="breadcrumb-item"><a href="./03a-download-merge.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data Download and Merging</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reproducing the Analysis: Early Smoking Initiation and Mortality</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Introduction and Background</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Overview of the Study</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-nhanes-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NHANES Data Overview</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Data Preparation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03a-download-merge.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data Download and Merging</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03b-mortality-merge.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Mortality and NHANES Merging</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-variable-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Variable Definitions and Cleaning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-cohort-definition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Cohort Definition</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Statistical Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-survey-design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Survey Design Specification</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-descriptive-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Descriptive Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-survival-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Survival Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-effect-modification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Effect Modification Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-sensitivity-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sensitivity Analyses</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Discussion</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-discussion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Discussion of Results</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-limitations-future.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Limitations and Future Directions</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Appendices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#data-acquisition-and-merging" id="toc-data-acquisition-and-merging" class="nav-link active" data-scroll-target="#data-acquisition-and-merging"><span class="header-section-number">4.1</span> Data Acquisition and Merging</a></li>
+  <li><a href="#variable-recoding-and-cleaning" id="toc-variable-recoding-and-cleaning" class="nav-link" data-scroll-target="#variable-recoding-and-cleaning"><span class="header-section-number">4.2</span> Variable Recoding and Cleaning</a></li>
+  <li><a href="#finalizing-datasets-and-assessing-data-completeness" id="toc-finalizing-datasets-and-assessing-data-completeness" class="nav-link" data-scroll-target="#finalizing-datasets-and-assessing-data-completeness"><span class="header-section-number">4.3</span> Finalizing Datasets and Assessing Data Completeness</a></li>
+  <li><a href="#chapter-summary-and-next-steps" id="toc-chapter-summary-and-next-steps" class="nav-link" data-scroll-target="#chapter-summary-and-next-steps"><span class="header-section-number">4.4</span> Chapter Summary and Next Steps</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data Download and Merging</span>
+</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><hr>
+<p>This part of the tutorial covers the beginning of the data preparation workflow for the project. It details the process of downloading the raw NHANES data files, selecting relevant variables, and merging the files together. While these steps prepare the data primarily for the main survival analysis, similar preparation is also required for the subsequent sensitivity and exploratory analyses.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In this chapter, we will:</p>
+<ul>
+<li><p>Programmatically download 20 separate data files from 10 NHANES cycles (1999-2018).</p></li>
+<li><p>Select and process only the necessary variables for the analysis.</p></li>
+<li><p>Merge the demographic and smoking data for each cycle.</p></li>
+<li><p>Harmonize variable names that are inconsistent across different survey years.</p></li>
+</ul>
+</div>
+</div>
+<p>We begin by loading the R packages required for this workflow.</p>
+<hr>
+<section id="data-acquisition-and-merging" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="data-acquisition-and-merging">
+<span class="header-section-number">4.1</span> Data Acquisition and Merging</h2>
+<ul>
+<li>R Code Chunk 1: Load Necessary Packages</li>
+</ul>
+<p>Before we begin the analysis, we import the necessary libraries to ensure we can use the certain functions. The <code>nhanesA</code> package is essential, as it provides functions to directly access and import the National Health and Nutrition Examination Survey (NHANES) datasets. In this package, data files from the 10 cycles (1999–2018) are denoted by lettered suffixes. For example, the demographics file for 1999–2000 is named <code>DEMO</code>, while subsequent cycles are named <code>DEMO_B</code>, <code>DEMO_C</code>, and up to the letter J. Other key packages are loaded to support data manipulation, variable recoding and merging.</p>
+<div class="cell">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Load required packages</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(nhanesA)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(car)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">library</span>(plyr)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="fu">library</span>(DataExplorer)</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="fu">library</span>(grid)</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="fu">library</span>(gridExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 2: Define NHANES Datasets by Cycle</li>
+</ul>
+<p>The first step in our workflow is to define character vectors using <code><a href="https://rdrr.io/r/base/c.html">c()</a></code> that contain the specific names of the NHANES data files we need to download. Following the <code>nhanesA</code> package’s naming convention, we create two vectors: <code>demo</code> for the demographic data files and <code>smoking</code> for the smoking questionnaire files, each covering the 10 cycles from 1999 to 2018.</p>
+<div class="cell" data-hash="03a-download-merge_cache/html/datasets_4d7fa348f18a8f3018159245b0f257ad">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>demo <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DEMO"</span>, <span class="st">"DEMO_B"</span>, <span class="st">"DEMO_C"</span>, <span class="st">"DEMO_D"</span>, <span class="st">"DEMO_E"</span>, </span>
+<span id="cb2-2"><a href="#cb2-2"></a>          <span class="st">"DEMO_F"</span>, <span class="st">"DEMO_G"</span>, <span class="st">"DEMO_H"</span>, <span class="st">"DEMO_I"</span>, <span class="st">"DEMO_J"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a>smoking <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"SMQ"</span>, <span class="st">"SMQ_B"</span>, <span class="st">"SMQ_C"</span>, <span class="st">"SMQ_D"</span>, <span class="st">"SMQ_E"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5"></a>             <span class="st">"SMQ_F"</span>, <span class="st">"SMQ_G"</span>, <span class="st">"SMQ_H"</span>, <span class="st">"SMQ_I"</span>, <span class="st">"SMQ_J"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 3: Download and Process NHANES Data</li>
+</ul>
+<p>This code section covers several key steps: downloading the raw data, defining the variables of interest, and then subsetting and processing the data files.</p>
+<p><strong>1. Download Raw Data</strong></p>
+<p>With the data files’ names defined in the lists <code>demo</code> and <code>smoking</code>, we now use the <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> function to iterate through each vector and download the corresponding data files using <code><a href="https://rdrr.io/pkg/nhanesA/man/nhanes.html">nhanesA::nhanes()</a></code>. For reproducibility and to avoid re-downloading the data every time the script is run, we save these lists of raw data files as <code>.rds</code> files into a <code>data/</code> subdirectory.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We will heavily use the <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> function in this section. This is a more efficient and readable alternative to a for loop in R for applying the same operation to each element of a list (in our case, each data file name).</p>
+</div>
+</div>
+<div class="cell" data-hash="03a-download-merge_cache/html/lapply-Download_ba8c6035c237e1ca11fc20868c793ec4">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>demo_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(demo, nhanes)</span>
+<span id="cb3-2"><a href="#cb3-2"></a>demo_data_files <span class="ot">&lt;-</span> demo_list</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="fu">saveRDS</span>(demo_data_files, <span class="st">"data/demo_data_files.rds"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a>smoking_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(smoking, nhanes)</span>
+<span id="cb3-6"><a href="#cb3-6"></a>smoking_data_files <span class="ot">&lt;-</span> smoking_list</span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="fu">saveRDS</span>(smoking_data_files, <span class="st">"data/smoking_data_files.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>2. Define Variables for Selection</strong></p>
+<p>Next, we define the specific variables (columns) we want to keep for our analysis. We create two vectors, <code>demo_columns</code> and <code>smoking_columns</code>, listing our variables of interest.</p>
+<p>It is important to note a key inconsistency across the NHANES cycles: the variable for the participant’s country of birth changes its name over time (<code>DMDBORN</code>, <code>DMDBORN2</code>, <code>DMDBORN4</code>). We include all three variations in our list to ensure we capture this information from every cycle. This will be changed into a single variable name later.</p>
+<p>For the demographic data, we selected the following key columns:</p>
+<ul>
+<li>
+<code>SEQN</code>: Respondent sequence number (unique identifier).</li>
+<li>
+<code>RIDAGEYR</code>: Age in years at screening.</li>
+<li>
+<code>RIAGENDR</code>: Gender.</li>
+<li>
+<code>RIDRETH1</code>: Race and ethnicity.</li>
+<li>
+<code>DMDBORN</code> / <code>DMDBORN2</code> / <code>DMDBORN4</code>: Country of birth.</li>
+<li>
+<code>SDDSRVYR</code>: NHANES survey cycle year.</li>
+<li>
+<code>WTINT2YR</code>: Full sample 2-year interview weight.</li>
+<li>
+<code>WTMEC2YR</code>: Full sample 2-year Mobile Examination Center (MEC) exam weight.</li>
+<li>
+<code>SDMVPSU</code>: Masked variance pseudo-Primary Sampling Unit.</li>
+<li>
+<code>SDMVSTRA</code>: Masked variance pseudo-stratum.</li>
+</ul>
+<p>For the smoking data, we selected the following key columns:</p>
+<ul>
+<li>
+<code>SEQN</code>: Respondent sequence number.</li>
+<li>
+<code>SMQ020</code>: Indicates if respondent smoked at least 100 cigarettes in life.</li>
+<li>
+<code>SMD030</code>: Age respondent started smoking cigarettes regularly.</li>
+<li>
+<code>SMQ040</code>: Current cigarette smoking status</li>
+</ul>
+<div class="cell" data-hash="03a-download-merge_cache/html/columns_244e4bfac7d1af25ab12bb105ab374bc">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>demo_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="st">"RIDAGEYR"</span>, <span class="st">"RIAGENDR"</span>, <span class="st">"RIDRETH1"</span>, </span>
+<span id="cb4-2"><a href="#cb4-2"></a>                  <span class="st">"DMDBORN"</span>, <span class="st">"DMDBORN2"</span>, <span class="st">"DMDBORN4"</span>, <span class="st">"SDDSRVYR"</span>, </span>
+<span id="cb4-3"><a href="#cb4-3"></a>                  <span class="st">"WTINT2YR"</span>, <span class="st">"WTMEC2YR"</span>, <span class="st">"SDMVPSU"</span>, <span class="st">"SDMVSTRA"</span>) </span>
+<span id="cb4-4"><a href="#cb4-4"></a></span>
+<span id="cb4-5"><a href="#cb4-5"></a>smoking_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="st">"SMQ020"</span>, <span class="st">"SMD030"</span>, <span class="st">"SMQ040"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>3. Subset Data and Translate Codes</strong></p>
+<p>The final step in this section is to process the raw data. We iterate through each downloaded data file in the lists, <code>demo_data_files</code> and <code>smoking_data_files</code>, and perform two key operations:</p>
+<ul>
+<li>Select Columns: We use <code><a href="https://dplyr.tidyverse.org/reference/select.html">dplyr::select()</a></code> with the <code>any_of()</code> helper to keep only the columns defined above in <code>demo_columns</code> and <code>smoking_columns</code>. Using <code>any_of()</code> prevents errors if a column name (e.g., <code>DMDBORN2</code>) doesn’t exist in a particular data file.</li>
+<li>Translate Codes: We use <code><a href="https://rdrr.io/pkg/nhanesA/man/nhanesTranslate.html">nhanesA::nhanesTranslate()</a></code> to convert the numeric codes in the data (e.g., <code>1</code> for ‘Male’) into more descriptive, human-readable factor labels.</li>
+</ul>
+<p>The newly processed lists of data frames are stored in <code>demo_data_files_2</code> and <code>smoking_data_files_2</code>.</p>
+<div class="cell" data-hash="03a-download-merge_cache/html/subset_026da5edb18e481defa1fa928430e793">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># DEMOGRAPHICS</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>demo_data_files_2 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">seq_along</span>(demo_data_files), <span class="cf">function</span>(i) {</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  current_cycle_data <span class="ot">&lt;-</span> demo_data_files[[i]]</span>
+<span id="cb5-4"><a href="#cb5-4"></a>  original <span class="ot">&lt;-</span> demo[i] </span>
+<span id="cb5-5"><a href="#cb5-5"></a>  </span>
+<span id="cb5-6"><a href="#cb5-6"></a>  <span class="co"># Select Columns</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a>  subset_data <span class="ot">&lt;-</span> current_cycle_data <span class="sc">%&gt;%</span> </span>
+<span id="cb5-8"><a href="#cb5-8"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(dplyr<span class="sc">::</span><span class="fu">any_of</span>(demo_columns))</span>
+<span id="cb5-9"><a href="#cb5-9"></a>  <span class="co"># Translate </span></span>
+<span id="cb5-10"><a href="#cb5-10"></a>  translated_data <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(original,</span>
+<span id="cb5-11"><a href="#cb5-11"></a>                                     <span class="fu">names</span>(subset_data), </span>
+<span id="cb5-12"><a href="#cb5-12"></a>                                     <span class="at">data =</span> subset_data)</span>
+<span id="cb5-13"><a href="#cb5-13"></a>  <span class="co"># Return</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a>  <span class="fu">return</span>(translated_data) </span>
+<span id="cb5-15"><a href="#cb5-15"></a>})</span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="co">#&gt; Translated columns: RIAGENDR RIDRETH1 DMDBORN SDDSRVYR</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a><span class="co">#&gt; Translated columns: RIAGENDR RIDRETH1 DMDBORN SDDSRVYR</span></span>
+<span id="cb5-18"><a href="#cb5-18"></a><span class="co">#&gt; Translated columns: RIAGENDR RIDRETH1 DMDBORN SDDSRVYR</span></span>
+<span id="cb5-19"><a href="#cb5-19"></a><span class="co">#&gt; Translated columns: RIAGENDR RIDRETH1 DMDBORN SDDSRVYR</span></span>
+<span id="cb5-20"><a href="#cb5-20"></a><span class="co">#&gt; Translated columns: RIAGENDR RIDRETH1 DMDBORN2 SDDSRVYR</span></span>
+<span id="cb5-21"><a href="#cb5-21"></a><span class="co">#&gt; Translated columns: RIAGENDR RIDRETH1 DMDBORN2 SDDSRVYR</span></span>
+<span id="cb5-22"><a href="#cb5-22"></a><span class="co">#&gt; Translated columns: RIAGENDR RIDRETH1 DMDBORN4 SDDSRVYR</span></span>
+<span id="cb5-23"><a href="#cb5-23"></a><span class="co">#&gt; Translated columns: RIAGENDR RIDRETH1 DMDBORN4 SDDSRVYR</span></span>
+<span id="cb5-24"><a href="#cb5-24"></a><span class="co">#&gt; Translated columns: RIAGENDR RIDRETH1 DMDBORN4 SDDSRVYR</span></span>
+<span id="cb5-25"><a href="#cb5-25"></a><span class="co">#&gt; Translated columns: RIAGENDR RIDRETH1 DMDBORN4 SDDSRVYR</span></span>
+<span id="cb5-26"><a href="#cb5-26"></a></span>
+<span id="cb5-27"><a href="#cb5-27"></a><span class="co"># SMOKING</span></span>
+<span id="cb5-28"><a href="#cb5-28"></a>smoking_data_files_2 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">seq_along</span>(smoking_data_files), <span class="cf">function</span>(i) {</span>
+<span id="cb5-29"><a href="#cb5-29"></a>  current_cycle_data <span class="ot">&lt;-</span> smoking_data_files[[i]]</span>
+<span id="cb5-30"><a href="#cb5-30"></a>  original <span class="ot">&lt;-</span> smoking[i]</span>
+<span id="cb5-31"><a href="#cb5-31"></a></span>
+<span id="cb5-32"><a href="#cb5-32"></a>  <span class="co"># Select Columns</span></span>
+<span id="cb5-33"><a href="#cb5-33"></a>  subset_data <span class="ot">&lt;-</span> current_cycle_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-34"><a href="#cb5-34"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(dplyr<span class="sc">::</span><span class="fu">any_of</span>(smoking_columns))</span>
+<span id="cb5-35"><a href="#cb5-35"></a>  <span class="co"># Translate</span></span>
+<span id="cb5-36"><a href="#cb5-36"></a>  translated_data <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(original, </span>
+<span id="cb5-37"><a href="#cb5-37"></a>                                     <span class="fu">names</span>(subset_data), </span>
+<span id="cb5-38"><a href="#cb5-38"></a>                                     <span class="at">data =</span> subset_data)</span>
+<span id="cb5-39"><a href="#cb5-39"></a>  <span class="co"># Return</span></span>
+<span id="cb5-40"><a href="#cb5-40"></a>  <span class="fu">return</span>(translated_data)</span>
+<span id="cb5-41"><a href="#cb5-41"></a>})</span>
+<span id="cb5-42"><a href="#cb5-42"></a><span class="co">#&gt; Translated columns: SMQ020 SMQ040</span></span>
+<span id="cb5-43"><a href="#cb5-43"></a><span class="co">#&gt; Translated columns: SMQ020 SMQ040</span></span>
+<span id="cb5-44"><a href="#cb5-44"></a><span class="co">#&gt; Translated columns: SMQ020 SMQ040</span></span>
+<span id="cb5-45"><a href="#cb5-45"></a><span class="co">#&gt; Translated columns: SMQ020 SMQ040</span></span>
+<span id="cb5-46"><a href="#cb5-46"></a><span class="co">#&gt; Translated columns: SMQ020 SMQ040</span></span>
+<span id="cb5-47"><a href="#cb5-47"></a><span class="co">#&gt; Translated columns: SMQ020 SMQ040</span></span>
+<span id="cb5-48"><a href="#cb5-48"></a><span class="co">#&gt; Translated columns: SMQ020 SMQ040</span></span>
+<span id="cb5-49"><a href="#cb5-49"></a><span class="co">#&gt; Translated columns: SMQ020 SMQ040</span></span>
+<span id="cb5-50"><a href="#cb5-50"></a><span class="co">#&gt; Translated columns: SMQ020 SMQ040</span></span>
+<span id="cb5-51"><a href="#cb5-51"></a><span class="co">#&gt; Translated columns: SMQ020 SMQ040</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 4: Merging Datasets</li>
+</ul>
+<p>Now that we have two processed lists of data frames (one for demographics and one for smoking), we need to merge them for each NHANES cycle. We iterate through both lists (<code>demo_data_files_2</code> and <code>smoking_data_files_2</code>), combining each corresponding pair of cycle-specific data frames into a single data frame.</p>
+<p>The merge is performed using <code><a href="https://rdrr.io/pkg/plyr/man/join_all.html">plyr::join_all()</a></code> with the unique participant identifier, <code>SEQN</code>, as the key. We use a <code>type = 'full'</code> join to ensure that all participants from both datasets are kept in the final merged data, while <code>NA</code> values will be inserted for any non-matching records.</p>
+<p>The final output, <code>data_all</code>, is a single list containing 10 merged data frames (one for each NHANES cycle).</p>
+<div class="cell" data-hash="03a-download-merge_cache/html/merge_646915991f4d4987ee224eaea5d56669">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>data_all <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">seq_along</span>(demo_data_files_2), <span class="cf">function</span>(i) {</span>
+<span id="cb6-2"><a href="#cb6-2"></a>  demo_df <span class="ot">&lt;-</span> demo_data_files_2[[i]]</span>
+<span id="cb6-3"><a href="#cb6-3"></a>  smoking_df <span class="ot">&lt;-</span> smoking_data_files_2[[i]]</span>
+<span id="cb6-4"><a href="#cb6-4"></a>  </span>
+<span id="cb6-5"><a href="#cb6-5"></a>  <span class="co"># Merge by SEQN</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>  merged_df <span class="ot">&lt;-</span> <span class="fu">join_all</span>(<span class="fu">list</span>(demo_df, smoking_df), </span>
+<span id="cb6-7"><a href="#cb6-7"></a>                        <span class="at">by =</span> <span class="st">"SEQN"</span>, </span>
+<span id="cb6-8"><a href="#cb6-8"></a>                        <span class="at">type =</span> <span class="st">'full'</span>)</span>
+<span id="cb6-9"><a href="#cb6-9"></a>  <span class="fu">return</span>(merged_df)</span>
+<span id="cb6-10"><a href="#cb6-10"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr></section><section id="variable-recoding-and-cleaning" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="variable-recoding-and-cleaning">
+<span class="header-section-number">4.2</span> Variable Recoding and Cleaning</h2>
+<ul>
+<li>R Code Chunk 5: Data Recoding and Cleaning</li>
+</ul>
+<p>This code chunk is the most extensive data processing step of the tutorial. Here, we will loop through each of the 10 merged data frames stored in <code>data_all</code> to perform data cleaning and recoding. The goal is to create a new, standardized set of variables that are consistent across all survey cycles.</p>
+<p>We will create clean variables for participant ID, demographics, smoking behavior, and survey design features.</p>
+<p><strong>1. Solve Inconsistent Column Names</strong></p>
+<p>As noted previously, the column name for the country of birth is inconsistent across cycles (<code>DMDBORN</code>, <code>DMDBORN2</code>, <code>DMDBORN4</code>). Before we can recode the values, we must first combine these into a single, consistent column name, <code>DMDBORN</code>. The following loop handles this standardization.</p>
+<div class="cell" data-hash="03a-download-merge_cache/html/DMDBORN_1d2df2a37e307003b2c9b14289977306">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>data_all2 <span class="ot">&lt;-</span> data_all</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(data_all2)) {</span>
+<span id="cb7-3"><a href="#cb7-3"></a>  df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(data_all2[[i]])</span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a>  <span class="cf">if</span> (<span class="st">"DMDBORN2"</span> <span class="sc">%in%</span> <span class="fu">names</span>(df)) {</span>
+<span id="cb7-6"><a href="#cb7-6"></a>    <span class="fu">names</span>(df)[<span class="fu">names</span>(df) <span class="sc">==</span> <span class="st">"DMDBORN2"</span>] <span class="ot">&lt;-</span> <span class="st">"DMDBORN"</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="st">"DMDBORN4"</span> <span class="sc">%in%</span> <span class="fu">names</span>(df)) {</span>
+<span id="cb7-8"><a href="#cb7-8"></a>    <span class="fu">names</span>(df)[<span class="fu">names</span>(df) <span class="sc">==</span> <span class="st">"DMDBORN4"</span>] <span class="ot">&lt;-</span> <span class="st">"DMDBORN"</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>  }</span>
+<span id="cb7-10"><a href="#cb7-10"></a>  data_all2[[i]] <span class="ot">&lt;-</span> df</span>
+<span id="cb7-11"><a href="#cb7-11"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>2. Recoding Reference Table</strong></p>
+<p>The table below summarizes the key new variables that will be created below. This serves as a quick reference for the data cleaning process.</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead><tr class="header">
+<th>New Variable</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>id</code></td>
+<td>Unique participant ID (from <code>SEQN</code>)</td>
+</tr>
+<tr class="even">
+<td><code>age</code></td>
+<td>Age in years at screening (from <code>RIDAGEYR</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>sex</code></td>
+<td>Biological sex (from <code>RIAGENDR</code>)</td>
+</tr>
+<tr class="even">
+<td><code>race</code></td>
+<td>Race/ethnicity (from <code>RIDRETH1</code>), recoded into White, Black, Hispanic, Others</td>
+</tr>
+<tr class="odd">
+<td><code>born</code></td>
+<td>Country of birth (from <code>DMDBORN</code>), recoded as “Born in US” or “Other place”</td>
+</tr>
+<tr class="even">
+<td><code>smoking</code></td>
+<td>Smoking status categorized into Never, Previous, or Current (from <code>SMQ020</code> and <code>SMQ040</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>smoking.age</code></td>
+<td>Age participant started smoking (<code>SMD030</code>), with special codes 777, 999 replaced by <code>NA</code>, and <code>0</code> for never smokers</td>
+</tr>
+<tr class="even">
+<td><code>smoked.while.child</code></td>
+<td>Derived variable indicating if smoking started at age 15 or younger</td>
+</tr>
+<tr class="odd">
+<td><code>survey.weight</code></td>
+<td>Full sample 2-year interview weight (from <code>WTINT2YR</code>)</td>
+</tr>
+<tr class="even">
+<td><code>psu</code></td>
+<td>Masked variance pseudo-Primary Sampling Unit (from <code>SDMVPSU</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>strata</code></td>
+<td>Masked variance pseudo-stratum (from <code>SDMVSTRA</code>)</td>
+</tr>
+<tr class="even">
+<td><code>year</code></td>
+<td>Survey cycle year (from <code>SDDSRVYR</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>3. Recoding and Cleaning Data</strong></p>
+<p>Now, we will perform the recoding in a series of steps. For clarity in this tutorial, we use a separate loop for each group of variables.</p>
+<p>First, we create a simple <strong>ID</strong> variable from the original <code>SEQN</code> variable.</p>
+<div class="cell" data-hash="03a-download-merge_cache/html/id_3780c26b3e6e2440cf61b516ec1ac45c">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(data_all2)) {</span>
+<span id="cb8-2"><a href="#cb8-2"></a>  <span class="co"># Set Data</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a>  dat2 <span class="ot">&lt;-</span> data_all2[[i]]</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  </span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="co"># ID</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a>  dat2<span class="sc">$</span>id <span class="ot">&lt;-</span> dat2<span class="sc">$</span>SEQN</span>
+<span id="cb8-7"><a href="#cb8-7"></a>  </span>
+<span id="cb8-8"><a href="#cb8-8"></a>  <span class="co"># Return</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>  data_all2[[i]] <span class="ot">&lt;-</span> dat2</span>
+<span id="cb8-10"><a href="#cb8-10"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Next, we recode the core <strong>demographic</strong> variables. This includes creating simple lowercase versions of <code>age</code> and <code>sex</code>, and collapsing the detailed categories for <code>race</code> and <code>born</code> into simpler factors using <code><a href="https://rdrr.io/pkg/car/man/recode.html">car::recode()</a></code>.</p>
+<div class="cell" data-hash="03a-download-merge_cache/html/demographic_69062f1e62737c4d083a43048457fae8">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(data_all2)) {</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  <span class="co"># Set Data</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>  dat2 <span class="ot">&lt;-</span> data_all2[[i]]</span>
+<span id="cb9-4"><a href="#cb9-4"></a>  </span>
+<span id="cb9-5"><a href="#cb9-5"></a>  <span class="co"># Age</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a>  dat2<span class="sc">$</span>age <span class="ot">&lt;-</span> dat2<span class="sc">$</span>RIDAGEYR</span>
+<span id="cb9-7"><a href="#cb9-7"></a>  </span>
+<span id="cb9-8"><a href="#cb9-8"></a>  <span class="co"># Sex</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a>  dat2<span class="sc">$</span>sex <span class="ot">&lt;-</span> dat2<span class="sc">$</span>RIAGENDR</span>
+<span id="cb9-10"><a href="#cb9-10"></a>  </span>
+<span id="cb9-11"><a href="#cb9-11"></a>  <span class="co"># Race/Ethnicity</span></span>
+<span id="cb9-12"><a href="#cb9-12"></a>  dat2<span class="sc">$</span>race <span class="ot">&lt;-</span> dat2<span class="sc">$</span>RIDRETH1</span>
+<span id="cb9-13"><a href="#cb9-13"></a>  dat2<span class="sc">$</span>race <span class="ot">&lt;-</span> car<span class="sc">::</span><span class="fu">recode</span>(dat2<span class="sc">$</span>race, <span class="at">recodes =</span> <span class="st">"</span></span>
+<span id="cb9-14"><a href="#cb9-14"></a><span class="st">    'Non-Hispanic White'='White';</span></span>
+<span id="cb9-15"><a href="#cb9-15"></a><span class="st">    'Non-Hispanic Black'='Black';</span></span>
+<span id="cb9-16"><a href="#cb9-16"></a><span class="st">    c('Mexican American','Other Hispanic')='Hispanic';</span></span>
+<span id="cb9-17"><a href="#cb9-17"></a><span class="st">    else='Others'"</span>)</span>
+<span id="cb9-18"><a href="#cb9-18"></a>  dat2<span class="sc">$</span>race <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat2<span class="sc">$</span>race, </span>
+<span id="cb9-19"><a href="#cb9-19"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"White"</span>, <span class="st">"Black"</span>, </span>
+<span id="cb9-20"><a href="#cb9-20"></a>                                 <span class="st">"Hispanic"</span>, <span class="st">"Others"</span>))</span>
+<span id="cb9-21"><a href="#cb9-21"></a>  </span>
+<span id="cb9-22"><a href="#cb9-22"></a>  <span class="co"># Country of birth</span></span>
+<span id="cb9-23"><a href="#cb9-23"></a>  dat2<span class="sc">$</span>born <span class="ot">&lt;-</span> dat2<span class="sc">$</span>DMDBORN</span>
+<span id="cb9-24"><a href="#cb9-24"></a>  dat2<span class="sc">$</span>born <span class="ot">&lt;-</span> car<span class="sc">::</span><span class="fu">recode</span>(dat2<span class="sc">$</span>born, <span class="at">recodes =</span> <span class="st">"</span></span>
+<span id="cb9-25"><a href="#cb9-25"></a><span class="st">    c('Born in Mexico','Born Elsewhere', 'Others') = 'Other place';</span></span>
+<span id="cb9-26"><a href="#cb9-26"></a><span class="st">    c('Born in 50 US States or Washington, DC', </span></span>
+<span id="cb9-27"><a href="#cb9-27"></a><span class="st">    'Born in 50 US states or Washington, DC') = 'Born in US';</span></span>
+<span id="cb9-28"><a href="#cb9-28"></a><span class="st">    else = NA"</span>)</span>
+<span id="cb9-29"><a href="#cb9-29"></a>  dat2<span class="sc">$</span>born <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat2<span class="sc">$</span>born, </span>
+<span id="cb9-30"><a href="#cb9-30"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Born in US"</span>, <span class="st">"Other place"</span>))</span>
+<span id="cb9-31"><a href="#cb9-31"></a>  </span>
+<span id="cb9-32"><a href="#cb9-32"></a>  <span class="co"># Return</span></span>
+<span id="cb9-33"><a href="#cb9-33"></a>  data_all2[[i]] <span class="ot">&lt;-</span> dat2</span>
+<span id="cb9-34"><a href="#cb9-34"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The tables below summarize the recoding logic for the demographic variables.</p>
+<table class="table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 51%">
+<col style="width: 13%">
+<col style="width: 15%">
+</colgroup>
+<thead><tr class="header">
+<th>Original Variable</th>
+<th>Original Categories</th>
+<th>New Variable</th>
+<th>New Categories</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>RIDRETH1</code></td>
+<td><code>Non-Hispanic White</code></td>
+<td><code>race</code></td>
+<td><code>White</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>Non-Hispanic Black</code></td>
+<td></td>
+<td><code>Black</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>
+<code>Mexican American</code>, <code>Other Hispanic</code>
+</td>
+<td></td>
+<td><code>Hispanic</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>
+<code>Non-Hispanic Asian</code>, <code>Other Race</code>
+</td>
+<td></td>
+<td><code>Others</code></td>
+</tr>
+<tr class="odd">
+<td><code>DMDBORN</code></td>
+<td><code>Born in 50 US States or Washington, DC</code></td>
+<td><code>born</code></td>
+<td><code>Born in US</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>
+<code>Born in Mexico</code>, <code>Born Elsewhere</code>, <code>Others</code>
+</td>
+<td></td>
+<td><code>Other place</code></td>
+</tr>
+</tbody>
+</table>
+<p>Next, we recode the <strong>smoking</strong> variables. A key step here is creating the three-level smoking status factor (<code>Never</code>, <code>Previous</code>, <code>Current</code>). This requires using both <code>SMQ020</code> (smoked 100+ cigarettes) and <code>SMQ040</code> (smokes at all now) to correctly identify former smokers. We also clean the <code>smoking.age</code> variable and create a new binary variable, <code>smoked.while.child</code>.</p>
+<div class="cell" data-hash="03a-download-merge_cache/html/smoking_de6922545016be400b005c97d7634394">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(data_all2)) {</span>
+<span id="cb10-2"><a href="#cb10-2"></a>  <span class="co"># Set Data</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a>  dat2 <span class="ot">&lt;-</span> data_all2[[i]]</span>
+<span id="cb10-4"><a href="#cb10-4"></a>  </span>
+<span id="cb10-5"><a href="#cb10-5"></a>  <span class="co"># Smoking Status</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a>  dat2<span class="sc">$</span>smoking <span class="ot">&lt;-</span> dat2<span class="sc">$</span>SMQ020</span>
+<span id="cb10-7"><a href="#cb10-7"></a>  dat2<span class="sc">$</span>smoking <span class="ot">&lt;-</span> car<span class="sc">::</span><span class="fu">recode</span>(dat2<span class="sc">$</span>smoking, <span class="st">"</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="st">    'Yes' = 'Current smoker';</span></span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="st">    'No' = 'Never smoker';</span></span>
+<span id="cb10-10"><a href="#cb10-10"></a><span class="st">    else = NA"</span>)</span>
+<span id="cb10-11"><a href="#cb10-11"></a>  dat2<span class="sc">$</span>smoking <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat2<span class="sc">$</span>smoking, </span>
+<span id="cb10-12"><a href="#cb10-12"></a>                         <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Never smoker"</span>, </span>
+<span id="cb10-13"><a href="#cb10-13"></a>                                    <span class="st">"Previous smoker"</span>, </span>
+<span id="cb10-14"><a href="#cb10-14"></a>                                    <span class="st">"Current smoker"</span>))</span>
+<span id="cb10-15"><a href="#cb10-15"></a>  </span>
+<span id="cb10-16"><a href="#cb10-16"></a>  <span class="co"># Use SMQ040 to identify former smokers</span></span>
+<span id="cb10-17"><a href="#cb10-17"></a>  dat2<span class="sc">$</span>smoking[dat2<span class="sc">$</span>SMQ040 <span class="sc">==</span> <span class="st">"Not at all?"</span> <span class="sc">|</span> </span>
+<span id="cb10-18"><a href="#cb10-18"></a>                 dat2<span class="sc">$</span>SMQ040 <span class="sc">==</span> <span class="st">"Not at all"</span>] <span class="ot">&lt;-</span> <span class="st">"Previous smoker"</span></span>
+<span id="cb10-19"><a href="#cb10-19"></a>  </span>
+<span id="cb10-20"><a href="#cb10-20"></a>  <span class="co"># Age Started Smoking</span></span>
+<span id="cb10-21"><a href="#cb10-21"></a>  dat2<span class="sc">$</span>smoking.age <span class="ot">&lt;-</span> dat2<span class="sc">$</span>SMD030</span>
+<span id="cb10-22"><a href="#cb10-22"></a>  dat2<span class="sc">$</span>smoking.age[dat2<span class="sc">$</span>smoking.age <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">777</span>, <span class="dv">999</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb10-23"><a href="#cb10-23"></a>  dat2<span class="sc">$</span>smoking.age[<span class="fu">is.na</span>(dat2<span class="sc">$</span>smoking.age) <span class="sc">&amp;</span> </span>
+<span id="cb10-24"><a href="#cb10-24"></a>                     dat2<span class="sc">$</span>smoking <span class="sc">==</span> <span class="st">"Never smoker"</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb10-25"><a href="#cb10-25"></a>  </span>
+<span id="cb10-26"><a href="#cb10-26"></a>  <span class="co"># Whether Smoking started age ≤ 15</span></span>
+<span id="cb10-27"><a href="#cb10-27"></a>  dat2<span class="sc">$</span>smoked.while.child <span class="ot">&lt;-</span> car<span class="sc">::</span><span class="fu">recode</span>(dat2<span class="sc">$</span>smoking.age, </span>
+<span id="cb10-28"><a href="#cb10-28"></a>  <span class="st">"0 = 'No'; 7:15 = 'Yes'; else = NA"</span>, <span class="at">as.factor =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-29"><a href="#cb10-29"></a>  </span>
+<span id="cb10-30"><a href="#cb10-30"></a>  <span class="co"># Return</span></span>
+<span id="cb10-31"><a href="#cb10-31"></a>  data_all2[[i]] <span class="ot">&lt;-</span> dat2</span>
+<span id="cb10-32"><a href="#cb10-32"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The table below summarizes the logic for creating the final <code>smoking</code> status variable.</p>
+<table class="table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 40%">
+<col style="width: 12%">
+<col style="width: 36%">
+</colgroup>
+<thead><tr class="header">
+<th>Step</th>
+<th>Original Variable(s)</th>
+<th>Logic</th>
+<th>Resulting Category</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>SMQ020</code></td>
+<td><code>No</code></td>
+<td><code>Never smoker</code></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>SMQ020</code></td>
+<td><code>Yes</code></td>
+<td><code>Current smoker</code></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>SMQ040</code></td>
+<td>If <code>SMQ020</code> is <code>Yes</code> AND <code>SMQ040</code> is <code>Not at all</code>, re-categorize</td>
+<td><code>Previous smoker</code></td>
+</tr>
+</tbody>
+</table>
+<p>For <code>smoking.age</code>, numeric codes for “Refused” (<code>777</code>) and “Don’t know” (<code>999</code>) were recoded to <code>NA</code>, and a value of <code>0</code> was assigned to never smokers for clarity.</p>
+<p>Finally, we create lowercase versions of the <strong>survey design</strong> variables for ease of use in later analyses.</p>
+<div class="cell" data-hash="03a-download-merge_cache/html/survey_a7d57faf4e0eeda2742b4ba1e72f027b">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(data_all2)) {</span>
+<span id="cb11-2"><a href="#cb11-2"></a>  <span class="co"># Set Data</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>  dat2 <span class="ot">&lt;-</span> data_all2[[i]]</span>
+<span id="cb11-4"><a href="#cb11-4"></a>  </span>
+<span id="cb11-5"><a href="#cb11-5"></a>  <span class="co"># Weight</span></span>
+<span id="cb11-6"><a href="#cb11-6"></a>  dat2<span class="sc">$</span>survey.weight <span class="ot">&lt;-</span> dat2<span class="sc">$</span>WTINT2YR</span>
+<span id="cb11-7"><a href="#cb11-7"></a>  </span>
+<span id="cb11-8"><a href="#cb11-8"></a>  <span class="co"># PSU</span></span>
+<span id="cb11-9"><a href="#cb11-9"></a>  dat2<span class="sc">$</span>psu <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(dat2<span class="sc">$</span>SDMVPSU)</span>
+<span id="cb11-10"><a href="#cb11-10"></a>  </span>
+<span id="cb11-11"><a href="#cb11-11"></a>  <span class="co"># Strata</span></span>
+<span id="cb11-12"><a href="#cb11-12"></a>  dat2<span class="sc">$</span>strata <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(dat2<span class="sc">$</span>SDMVSTRA)</span>
+<span id="cb11-13"><a href="#cb11-13"></a>  </span>
+<span id="cb11-14"><a href="#cb11-14"></a>  <span class="co"># Survey year</span></span>
+<span id="cb11-15"><a href="#cb11-15"></a>  dat2<span class="sc">$</span>year <span class="ot">&lt;-</span> dat2<span class="sc">$</span>SDDSRVYR</span>
+<span id="cb11-16"><a href="#cb11-16"></a>  </span>
+<span id="cb11-17"><a href="#cb11-17"></a>  <span class="co"># Return</span></span>
+<span id="cb11-18"><a href="#cb11-18"></a>  data_all2[[i]] <span class="ot">&lt;-</span> dat2</span>
+<span id="cb11-19"><a href="#cb11-19"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr></section><section id="finalizing-datasets-and-assessing-data-completeness" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="finalizing-datasets-and-assessing-data-completeness">
+<span class="header-section-number">4.3</span> Finalizing Datasets and Assessing Data Completeness</h2>
+<ul>
+<li>R Code Chunk 6: Create, Save, and Plot Datasets</li>
+</ul>
+<p>The final step is to create the analytic datasets and save them for use in subsequent chapters. The following code loops through each of the 10 cleaned data frames and performs several actions:</p>
+<ul>
+<li>Selects the final set of cleaned variables.</li>
+<li>Creates the final analytic sample by filtering for eligible participants.</li>
+<li>Generates a missing data plot for each cycle and stores it in a list.</li>
+<li>Saves the data for each cycle into a separate .RData file.</li>
+</ul>
+<p>First, we define two vectors: <code>nhanes_all</code> contains the desired names for each cycle’s data frame (e.g., <code>nhanes00</code>, <code>nhanes01</code>, etc.), and <code>vars</code> lists the set of cleaned variable names we want to keep for the analysis.</p>
+<p>Within the loop, the code subsets the data to include only participants aged 20 years or older, matching the age criteria of the original paper. It then saves both the full data frame (all ages) and the filtered analytic data frame (ages 20+) into a single <code>.RData</code> file in the <code>data/</code> directory (e.g., <code>analytic00.RData</code>).</p>
+<div class="cell" data-hash="03a-download-merge_cache/html/analytic_fbd662df99a628e348215af1060e06c9">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>nhanes_all <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"nhanes00"</span>, <span class="st">"nhanes01"</span>, <span class="st">"nhanes03"</span>, <span class="st">"nhanes05"</span>, </span>
+<span id="cb12-2"><a href="#cb12-2"></a>                <span class="st">"nhanes07"</span>, <span class="st">"nhanes09"</span>, <span class="st">"nhanes11"</span>, </span>
+<span id="cb12-3"><a href="#cb12-3"></a>                <span class="st">"nhanes13"</span>, <span class="st">"nhanes15"</span>, <span class="st">"nhanes17"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4"></a></span>
+<span id="cb12-5"><a href="#cb12-5"></a>vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"age"</span>, <span class="st">"sex"</span>, <span class="st">"race"</span>, <span class="st">"born"</span>, </span>
+<span id="cb12-6"><a href="#cb12-6"></a>          <span class="st">"smoking.age"</span>, <span class="st">"smoked.while.child"</span>, <span class="st">"smoking"</span>, </span>
+<span id="cb12-7"><a href="#cb12-7"></a>          <span class="st">"survey.weight"</span>, <span class="st">"psu"</span>, <span class="st">"strata"</span>, <span class="st">"year"</span>)</span>
+<span id="cb12-8"><a href="#cb12-8"></a></span>
+<span id="cb12-9"><a href="#cb12-9"></a>missing_plots <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb12-10"><a href="#cb12-10"></a></span>
+<span id="cb12-11"><a href="#cb12-11"></a></span>
+<span id="cb12-12"><a href="#cb12-12"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(data_all2)) {</span>
+<span id="cb12-13"><a href="#cb12-13"></a>  dat2 <span class="ot">&lt;-</span> data_all2[[i]]</span>
+<span id="cb12-14"><a href="#cb12-14"></a>  </span>
+<span id="cb12-15"><a href="#cb12-15"></a>  nhanes_i <span class="ot">&lt;-</span> nhanes_all[i]</span>
+<span id="cb12-16"><a href="#cb12-16"></a>  <span class="fu">assign</span>(nhanes_i, dat2[, vars], <span class="at">envir =</span> .GlobalEnv)</span>
+<span id="cb12-17"><a href="#cb12-17"></a>  </span>
+<span id="cb12-18"><a href="#cb12-18"></a>  analytic <span class="ot">&lt;-</span> <span class="fu">subset</span>(<span class="fu">get</span>(nhanes_i), age <span class="sc">&gt;=</span> <span class="dv">20</span>)</span>
+<span id="cb12-19"><a href="#cb12-19"></a>  </span>
+<span id="cb12-20"><a href="#cb12-20"></a>  <span class="co"># Create a temporary dataset for plotting, excluding irrelevant variables</span></span>
+<span id="cb12-21"><a href="#cb12-21"></a>  data_for_plot <span class="ot">&lt;-</span> analytic <span class="sc">%&gt;%</span> </span>
+<span id="cb12-22"><a href="#cb12-22"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>born, <span class="sc">-</span>smoked.while.child)</span>
+<span id="cb12-23"><a href="#cb12-23"></a>  </span>
+<span id="cb12-24"><a href="#cb12-24"></a>  <span class="co"># Generate a plot, add a title, and remove individual axis titles</span></span>
+<span id="cb12-25"><a href="#cb12-25"></a>  p <span class="ot">&lt;-</span> <span class="fu">plot_missing</span>(data_for_plot) <span class="sc">+</span></span>
+<span id="cb12-26"><a href="#cb12-26"></a>       <span class="fu">labs</span>(<span class="at">title =</span> nhanes_i) <span class="sc">+</span></span>
+<span id="cb12-27"><a href="#cb12-27"></a>       <span class="fu">theme</span>(</span>
+<span id="cb12-28"><a href="#cb12-28"></a>         <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb12-29"><a href="#cb12-29"></a>         <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb12-30"><a href="#cb12-30"></a>         <span class="at">axis.title =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb12-31"><a href="#cb12-31"></a>       )</span>
+<span id="cb12-32"><a href="#cb12-32"></a>  missing_plots[[i]] <span class="ot">&lt;-</span> p</span>
+<span id="cb12-33"><a href="#cb12-33"></a>  </span>
+<span id="cb12-34"><a href="#cb12-34"></a>  <span class="fu">cat</span>(<span class="st">"Processing:"</span>, nhanes_i, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb12-35"><a href="#cb12-35"></a>  <span class="fu">print</span>(<span class="fu">dim</span>(analytic))</span>
+<span id="cb12-36"><a href="#cb12-36"></a>  </span>
+<span id="cb12-37"><a href="#cb12-37"></a>  analytic_i <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"analytic"</span>, <span class="fu">substr</span>(nhanes_i, <span class="dv">7</span>, <span class="dv">8</span>))</span>
+<span id="cb12-38"><a href="#cb12-38"></a>  <span class="fu">assign</span>(analytic_i, analytic, <span class="at">envir =</span> .GlobalEnv)</span>
+<span id="cb12-39"><a href="#cb12-39"></a>  </span>
+<span id="cb12-40"><a href="#cb12-40"></a>  <span class="co"># Create 'data' directory if it does not exist</span></span>
+<span id="cb12-41"><a href="#cb12-41"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">"data"</span>)) {</span>
+<span id="cb12-42"><a href="#cb12-42"></a>    <span class="fu">dir.create</span>(<span class="st">"data"</span>)</span>
+<span id="cb12-43"><a href="#cb12-43"></a>  }</span>
+<span id="cb12-44"><a href="#cb12-44"></a></span>
+<span id="cb12-45"><a href="#cb12-45"></a>  <span class="co"># Save</span></span>
+<span id="cb12-46"><a href="#cb12-46"></a>  <span class="fu">save</span>(<span class="at">list =</span> <span class="fu">c</span>(nhanes_i, analytic_i),</span>
+<span id="cb12-47"><a href="#cb12-47"></a>       <span class="at">file =</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="fu">paste0</span>(analytic_i, <span class="st">".RData"</span>)))</span>
+<span id="cb12-48"><a href="#cb12-48"></a>}</span>
+<span id="cb12-49"><a href="#cb12-49"></a><span class="co">#&gt; Processing: nhanes00 </span></span>
+<span id="cb12-50"><a href="#cb12-50"></a><span class="co">#&gt; [1] 4880   12</span></span>
+<span id="cb12-51"><a href="#cb12-51"></a><span class="co">#&gt; Processing: nhanes01 </span></span>
+<span id="cb12-52"><a href="#cb12-52"></a><span class="co">#&gt; [1] 5411   12</span></span>
+<span id="cb12-53"><a href="#cb12-53"></a><span class="co">#&gt; Processing: nhanes03 </span></span>
+<span id="cb12-54"><a href="#cb12-54"></a><span class="co">#&gt; [1] 5041   12</span></span>
+<span id="cb12-55"><a href="#cb12-55"></a><span class="co">#&gt; Processing: nhanes05 </span></span>
+<span id="cb12-56"><a href="#cb12-56"></a><span class="co">#&gt; [1] 4979   12</span></span>
+<span id="cb12-57"><a href="#cb12-57"></a><span class="co">#&gt; Processing: nhanes07 </span></span>
+<span id="cb12-58"><a href="#cb12-58"></a><span class="co">#&gt; [1] 5935   12</span></span>
+<span id="cb12-59"><a href="#cb12-59"></a><span class="co">#&gt; Processing: nhanes09 </span></span>
+<span id="cb12-60"><a href="#cb12-60"></a><span class="co">#&gt; [1] 6218   12</span></span>
+<span id="cb12-61"><a href="#cb12-61"></a><span class="co">#&gt; Processing: nhanes11 </span></span>
+<span id="cb12-62"><a href="#cb12-62"></a><span class="co">#&gt; [1] 5560   12</span></span>
+<span id="cb12-63"><a href="#cb12-63"></a><span class="co">#&gt; Processing: nhanes13 </span></span>
+<span id="cb12-64"><a href="#cb12-64"></a><span class="co">#&gt; [1] 5769   12</span></span>
+<span id="cb12-65"><a href="#cb12-65"></a><span class="co">#&gt; Processing: nhanes15 </span></span>
+<span id="cb12-66"><a href="#cb12-66"></a><span class="co">#&gt; [1] 5719   12</span></span>
+<span id="cb12-67"><a href="#cb12-67"></a><span class="co">#&gt; Processing: nhanes17 </span></span>
+<span id="cb12-68"><a href="#cb12-68"></a><span class="co">#&gt; [1] 5569   12</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Finally, the 10 missing data plots are displayed in a single 5x2 grid.</p>
+<div class="cell" data-hash="03a-download-merge_cache/html/fig-missing-data_3c49672c9547311585fe03dca45030f2">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Define common axis labels</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>y_label <span class="ot">&lt;-</span> <span class="fu">textGrob</span>(<span class="st">"Features"</span>, <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">12</span>), <span class="at">rot =</span> <span class="dv">90</span>)</span>
+<span id="cb13-3"><a href="#cb13-3"></a>x_label <span class="ot">&lt;-</span> <span class="fu">textGrob</span>(<span class="st">"Missing Rows"</span>, <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">12</span>))</span>
+<span id="cb13-4"><a href="#cb13-4"></a></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="co"># Arrange the plots in a grid with common labels</span></span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="fu">grid.arrange</span>(</span>
+<span id="cb13-7"><a href="#cb13-7"></a>  <span class="at">grobs =</span> missing_plots,</span>
+<span id="cb13-8"><a href="#cb13-8"></a>  <span class="at">nrow =</span> <span class="dv">5</span>,</span>
+<span id="cb13-9"><a href="#cb13-9"></a>  <span class="at">ncol =</span> <span class="dv">2</span>,</span>
+<span id="cb13-10"><a href="#cb13-10"></a>  <span class="at">left =</span> y_label,</span>
+<span id="cb13-11"><a href="#cb13-11"></a>  <span class="at">bottom =</span> x_label</span>
+<span id="cb13-12"><a href="#cb13-12"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div id="fig-missing-data" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="03a-download-merge_files/figure-html/fig-missing-data-1.png" class="img-fluid figure-img" width="768"></p>
+<figcaption class="figure-caption">Figure&nbsp;4.1: Missing data patterns for analytic variables across all 10 NHANES cycles (1999-2018). The x-axis represents the number of missing observations.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>This concludes the first part of the data preparation stage.</p>
+<hr></section><section id="chapter-summary-and-next-steps" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="chapter-summary-and-next-steps">
+<span class="header-section-number">4.4</span> Chapter Summary and Next Steps</h2>
+<p>We have now successfully completed the initial data acquisition and preparation phase. We have downloaded 20 raw data files, processed them into a consistent format, and merged them into a single list of 10 data frames—one for each NHANES cycle.</p>
+<p>In the next chapter, “Mortality and NHANES Merging,” we will combine these 10 data frames and link them with the public-use mortality data to create the final, comprehensive dataset for our analysis.</p>
+
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./02-nhanes-overview.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NHANES Data Overview</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./03b-mortality-merge.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Mortality and NHANES Merging</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

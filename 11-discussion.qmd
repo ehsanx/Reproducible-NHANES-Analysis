@@ -1,0 +1,32 @@
+# Discussion of Results
+
+---
+
+The findings from this project consistently demonstrate a strong, dose-response relationship between the age of smoking initiation and all-cause mortality. Across all analyses, a clear pattern emerged: the earlier an individual starts smoking, the higher their risk of premature death. The main adjusted model found that individuals who started smoking before age 10 had a hazard ratio of **2.71** (95% CI: 2.05, 3.58) compared to never smokers, quantifying the profound danger of very early initiation.
+
+This chapter synthesizes the evidence from the four key analyses performed in this walkthrough to build a comprehensive picture of these findings.
+
+## Synthesizing the Evidence
+
+### The Main Finding: A Clear Dose-Response Relationship
+The **Main Survival and Effect Modification Analysis** formed the core of this investigation. Using data from all 10 NHANES cycles (1999–2018), it established that the risk of mortality incrementally increased with earlier ages of smoking initiation. Furthermore, this analysis revealed that the association was not uniform across all demographic groups. While the interaction by race/ethnicity was not statistically significant, the interaction by **sex was significant (p = 0.001)**, with females showing slightly higher hazard ratios than males across most initiation categories.
+
+### Supporting Evidence: The Role of Smoking Duration
+The **Exploratory Analysis of Smoking Duration** (1999–2016) provided important context for our main finding. It revealed a clear trend where an earlier age of initiation was associated with a longer total duration of smoking. This suggests a potential mediating pathway: starting to smoke earlier leads to a longer cumulative exposure to tobacco, which in turn increases the risk of mortality.
+
+### Confirming Robustness: The Sensitivity Analyses
+Two sensitivity analyses were conducted to challenge our primary findings and ensure their robustness:
+
+1.  **Adjusting for SES Proxies**: This analysis confirmed that the association between smoking initiation and mortality held even after adjusting for family income and education level. This strengthens our conclusion that the observed effect is not simply a result of socioeconomic confounding.
+2.  **Including the Non-Hispanic Asian Category (2011–2018)**: By focusing on a more recent subset of data, we were able to conduct a more nuanced effect modification analysis. While the smaller sample size resulted in wider confidence intervals, the overall trends remained consistent with the main analysis.
+
+## Public Health Implications ⚕️
+
+The consistency of these findings across multiple analyses underscores a critical public health message: **preventing smoking initiation among youth is one of the most effective strategies to reduce premature mortality.** The particularly high risk for those who start before age 10 highlights the need for interventions targeted at children and adolescents. The significant differences observed by sex also suggest that prevention and cessation programs may need to be tailored to address gender-specific factors.
+
+## Chapter Summary and Next Steps
+
+This chapter synthesized the key findings from the main analysis and the subsequent sensitivity and exploratory analyses. We confirmed a consistent and strong dose-response relationship between earlier smoking initiation and higher all-cause mortality, with this effect being significantly modified by sex.
+
+While the results are compelling, it is crucial to acknowledge the study's constraints. The next chapter, **"Limitations and Future Directions,"** will discuss the methodological limitations of the analysis and suggest avenues for future research.
+        

@@ -1,0 +1,135 @@
+# Reproducing Figures
+
+-   KM curves
+
+-   HR plots
+
+The following section focuses on reproducing the key figures from the main and sub analysis in the published research paper for easy viewing.
+
+```{r setup, cache=TRUE, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE,
+  fig.path = "images/",
+  message = FALSE,
+  warning = FALSE,
+  cache = TRUE
+)
+```
+
+```{r libraries, cache=TRUE}
+# Load required packages
+library(readr)
+library(car)
+library(dplyr)
+library(DataExplorer)
+library(tableone)
+library(Publish)
+library(survey)
+options(survey.want.obsolete=TRUE)
+library(survival)
+require(knitr)
+require(kableExtra)
+library(ggplot2) 
+library(stringr)
+
+```
+
+The figures reproduced are: - 1. - 2.
+
+## R Code Chunk 1: Load the necessary objects
+
+w.design0
+
+```{r, cache=TRUE}
+# Load the survey design object
+if (!file.exists("data/w.design0.rds")) {
+  stop("Error: 'data/w.design0.rds' not found. Please ensure 08-survival-analysis.qmd has been rendered successfully first.")
+}
+
+w.design0 <- readRDS(file = "data/w.design0.rds")
+```
+
+sA
+
+```{r, cache=TRUE}
+# Load Kaplan-Meier fit object (sA) 
+if (!file.exists("data/sA.rds")) {
+  message("sA.rds not found. Attempting to re-calculate (requires raw data).")
+  formulax0 <- as.formula(Surv(stime.since.birth, status_all) ~ exposure.cat)
+  sA <- svykm(formulax0, design=w.design0)
+  message("sA re-calculated. Consider saving it in Chapter 8.")
+} else {
+  sA <- readRDS("data/sA.rds")
+}
+
+```
+
+fr
+
+```{r, cache=TRUE}
+# Load final processed HR data frame fr 
+
+fr <- readRDS("data/fr.rds")
+
+```
+
+#### TO DO - for sub plot
+
+```{r, cache=TRUE}
+
+# To Do
+
+```
+
+## R Code Chunk 2: Kaplan-Meier Curves
+
+The following code reproduces Figure 1 from the published paper, which displays the survey-weighted Kaplan-Meier survival curves. This uses the `sA` object.
+
+```{r KMcurve, cache=TRUE}
+dummy <- length(unique(as.factor(w.design0$variables$exposure.cat))) # To get number of colors
+
+# Prepare plotting parameters
+par(oma=rep(0,4)) # Sets outer margins
+par(mar=c(5,4,2,2) + 0.1) # Sets plot margins (bottom, left, top, right)
+
+plot(sA, pars=list(col=c(1:dummy)), # Use dynamic number of colors
+     xlab = "Time (Years)",
+     ylab = "Proportion Surviving",
+     main = "Survey-Weighted Kaplan-Meier Curve: All-Cause Mortality by Smoking Initiation Age",
+     cex.lab = 1.2, # Larger axis labels
+     cex.axis = 1.1, # Larger axis numbers
+     cex.main = 1.3) # Larger main title
+legend("bottomleft", levels(as.factor(w.design0$variables$exposure.cat)),
+       col = (1:dummy), lty = c(1,1),
+       bty = "n", # No box around the legend
+       cex = 1.0) # Font size for legend
+
+```
+
+## R Code Chunk 3: Hazard Ratio (HR) Forest Plot
+
+This section reproduces Figure 2 from the published paper , which is a comprehensive forest plot summarizing the crude, adjusted, and subgroup-specific Hazard Ratios for all-cause mortality across different categories of smoking initiation age. This uses the `fr` object.
+
+```{r forestplot,  cache=TRUE}
+ggplot(fr, 
+       aes(x = mean, 
+           y = group, 
+           colour = age.grp)) + 
+  geom_errorbar(aes(xmax = lower, xmin = upper), 
+                position = "dodge") + 
+  geom_point(position = position_dodge(0.9)) + 
+  labs(x = "Odds Ratio", y = "", 
+       legend=TRUE, col = "Age group") +
+  theme_classic() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.border = element_blank(),
+        legend.title=element_text(size=12), 
+        legend.text=element_text(size=12),
+        plot.title = element_text(hjust = 0),
+        axis.text.x = element_text(size = 10, face = "bold"),
+        axis.text.y = element_text(size = 10, face = "bold"),
+        legend.position=c(.8, .8))
+
+```
+
+<!-- ## R Code Chunk 4: Reproducing Appendix Figures -->

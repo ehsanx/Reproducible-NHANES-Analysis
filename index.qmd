@@ -1,0 +1,37 @@
+# Reproducing the Analysis: Early Smoking Initiation and Mortality
+
+---
+
+Welcome! This technical documentation provides a comprehensive and transparent guide for reproducing the analysis from the published paper:
+
+> Karim, M. E., Hossain, M. B., & Zheng, C. (2025). Examining the Role of Race/Ethnicity and Sex in Modifying the Association Between Early Smoking Initiation and Mortality: A 20-Year NHANES Analysis. *AJPM Focus*, 4(2), 100282. https://doi.org/10.1016/j.focus.2024.100282
+
+By documenting the complete analytical pipeline—from raw data processing to the final statistical models—this guide allows researchers to fully understand and replicate the study, or to adapt this framework for new research questions.
+
+## About This Guide
+
+This guide is designed for researchers, students, and public health analysts interested in longitudinal data analysis using NHANES. It demonstrates a complete workflow, including:
+
+-   **Data Acquisition**: Programmatically downloading and merging multiple cycles of NHANES data.
+-   **Data Cleaning**: Harmonizing variables that change across survey years.
+-   **Complex Survey Analysis**: Correctly applying survey weights, strata, and clusters for nationally representative estimates.
+-   **Survival Modeling**: Implementing Kaplan-Meier curves, Cox proportional hazards models, and effect modification analysis.
+
+## Book Structure
+
+This book is structured to guide you through each stage of the analysis:
+
+-   **Part I: Introduction and Background**
+    -   Sets the context for the study, provides an overview of the NHANES data, and outlines the research objectives.
+
+-   **Part II: Data Preparation**
+    -   Details the steps for downloading, cleaning, and merging the raw NHANES and mortality linkage files to create the final analytic dataset.
+
+-   **Part III: Statistical Analysis**
+    -   Elaborates on the complex survey design specification and the various statistical models employed, including survival analysis, effect modification, and sensitivity analyses.
+
+-   **Part IV: Discussion**
+    -   Presents the key findings of the analysis, discusses their implications in the context of the original paper, and outlines limitations and future directions.
+
+Let's get started!
+        

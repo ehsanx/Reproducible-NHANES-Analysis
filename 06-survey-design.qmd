@@ -1,0 +1,121 @@
+# Survey Design Specification
+
+---
+
+This section begins the statistical portion of the analysis by specifying the complex survey design of the NHANES data. In the previous chapters, the raw NHANES and mortality data were downloaded, cleaned, and merged, resulting in the `dat.full.with.mortality` and `dat.complete` datasets. Now, we will use the survey package in R to correctly account for the complex sampling design, which is a critical step for all subsequent analyses.
+
+```{r setup, cache=TRUE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+  fig.path = "images/"
+)
+```
+
+```{r libraries, cache=TRUE}
+# Load required packages
+library(survey) 
+options(survey.want.obsolete=TRUE)
+```
+
+## Loading the Analytic Datasets
+
+* R Code Chunk 1: Load Data
+
+The following code loads the datasets created in the previous steps. `dat.full.with.mortality` contains the complete merged data, while `dat.complete` and `dat.analytic2` contain the filtered subsets that will be used to define the analytic sub-cohort for the survey design.
+
+```{r load, cache=TRUE}
+# Load the full merged dataset
+load(file = "data/dat.full.with.mortality.RData")
+
+# Load the intermediate analytic dataset 
+# Used for subsetting the design
+load(file = "data/dat.analytic2.RData") 
+load(file = "data/dat.complete.RData") 
+
+# Check dimensions
+dim(dat.full.with.mortality)
+dim(dat.analytic2)
+dim(dat.complete)
+```
+
+**Note**: The `dat.complete` and `dat.analytic2` datasets are identical. This confirms that after participants with missing exposure or outcome data were removed, no missing values remained for the covariates used in the main analysis, as stated in the original paper
+
+---
+
+## Specifying the Survey Design
+
+* R Code Chunk 2: Specify the Survey Design Object
+
+To correctly analyze NHANES data, we must account for its complex sampling design, which includes stratification, clustering, and unequal weighting. The following code uses the `survey` package to create a survey design object. This step is critical for obtaining accurate standard errors and p-values in all subsequent analyses.
+
+::: {.callout-note}
+Accounting for the complex sampling design is not just a formality; it is the most critical step for ensuring our results are statistically valid.
+
+We will use the `svydesign()` function from the survey package to create a "survey design object." This object bundles our dataset with the information on how the data was collected (the weights, strata, and PSUs). All of our subsequent analyses will be performed on this object, not on the raw data frame.
+
+Failing to perform this step and instead running analyses on the raw data would lead to severely underestimated standard errors and incorrect p-values, likely resulting in false positive findings. By specifying the design, we ensure our results are nationally representative and that our statistical inferences are trustworthy.
+:::
+
+
+**1. The `svydesign` Function**
+
+We use the `svydesign()` function to combine the dataset with its design information. The key arguments are:
+
+-   `ids = ~psu`: Specifies the primary sampling unit (PSU) variable.
+-   `strata = ~strata`: Specifies the stratification variable.
+-   `weights = ~survey.weight.new`: Specifies the adjusted survey weight variable.
+-   `nest = TRUE`: Correctly handles PSUs that are nested within strata.
+
+**2. Subsetting the Design Object**
+
+For correct variance estimation, the `survey` package requires us to define the design on the full dataset first and then specify the subset to be analyzed. We do this by creating a `miss` variable on the `dat.full.with.mortality` dataset. We then create the full design object (`w.design`) and use the `subset()` function to create the final analytic design object (`w.design0`). This final object includes only our cohort of interest (where `miss == 0`) and participants with positive survey weights.
+
+```{r survey, cache=TRUE}
+# Set up the 'miss' indicator for subsetting the design
+# Initialize 'miss' as 1 (excluded) for all 
+# in dat.full.with.mortality
+dat.full.with.mortality$miss <- 1
+
+# Set 'miss' to 0 (included) for participants whose 'id' 
+# is in dat.analytic2
+dat.full.with.mortality$miss[dat.full.with.mortality$id 
+                             %in% dat.analytic2$id] <- 0
+
+# Display the distribution of the 'miss' variable
+table(dat.full.with.mortality$miss)
+
+# Create the full survey design object
+w.design <- svydesign(ids = ~psu,
+                      strata = ~strata,
+                      weights = ~survey.weight.new,
+                      data = dat.full.with.mortality,
+                      nest = TRUE)
+
+# Subset the design to the analytic cohort (miss == 0) and 
+# positive weights
+w.design0 <- subset(w.design, miss == 0 & survey.weight.new > 0)
+
+# Verify the number of observations in the subsetted design
+cat("Number of observations in w.design0 (subsetted design):", 
+    nrow(w.design0), "\n")
+```
+
+---
+
+## Saving the Survey Design Object
+
+* R Code Chunk 3: Save Survey Design Object
+
+Finally, we save the completed survey design object (`w.design0`) as an `.rds` file. This allows us to load this object directly in the next chapters without needing to re-run the design specification code, making our workflow more efficient.
+
+```{r save, cache=TRUE}
+# Save the final survey design object
+saveRDS(w.design0, file = "data/w.design0.rds")
+```
+
+This completes the survey design specification section of the statistical analysis stage.
+
+## Chapter Summary and Next Steps
+
+We have now completed one of the most critical methodological steps in this analysis. By creating a survey design object (`w.design0`), we have properly accounted for the complex stratification, clustering, and weighting of the NHANES data. This ensures that all subsequent analyses will produce statistically valid, nationally representative results.
+
+With the survey design specified, we are ready to begin our analysis. In the next chapter, "Descriptive Analysis," we will generate the first set of results: weighted summary statistics of our cohort.

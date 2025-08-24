@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Analyzing Early Smoking Initiation and Mortality - 10&nbsp; Survival Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./09-effect-modification.html" rel="next">
+<link href="./07-descriptive-analysis.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><script src="site_libs/kePrint-0.0.1/kePrint.js"></script><link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+</head>
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/ubc_logo.png" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">NHANES Mortality Analysis</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools ms-auto">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-survey-design.html">Statistical Analysis</a></li><li class="breadcrumb-item"><a href="./08-survival-analysis.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Survival Analysis</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reproducing the Analysis: Early Smoking Initiation and Mortality</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Introduction and Background</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Overview of the Study</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-nhanes-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NHANES Data Overview</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Data Preparation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03a-download-merge.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data Download and Merging</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03b-mortality-merge.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Mortality and NHANES Merging</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-variable-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Variable Definitions and Cleaning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-cohort-definition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Cohort Definition</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Statistical Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-survey-design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Survey Design Specification</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-descriptive-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Descriptive Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-survival-analysis.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Survival Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-effect-modification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Effect Modification Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-sensitivity-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sensitivity Analyses</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Discussion</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-discussion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Discussion of Results</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-limitations-future.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Limitations and Future Directions</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Appendices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#kaplan-meier-survival-analysis-figure-1" id="toc-kaplan-meier-survival-analysis-figure-1" class="nav-link active" data-scroll-target="#kaplan-meier-survival-analysis-figure-1"><span class="header-section-number">10.1</span> Kaplan-Meier Survival Analysis (Figure 1)</a></li>
+  <li>
+<a href="#cox-proportional-hazards-models-figure-2" id="toc-cox-proportional-hazards-models-figure-2" class="nav-link" data-scroll-target="#cox-proportional-hazards-models-figure-2"><span class="header-section-number">10.2</span> Cox Proportional Hazards Models (Figure 2)</a>
+  <ul class="collapse">
+<li><a href="#unadjusted-model-crude-hrs" id="toc-unadjusted-model-crude-hrs" class="nav-link" data-scroll-target="#unadjusted-model-crude-hrs"><span class="header-section-number">10.2.1</span> Unadjusted Model (Crude HRs)</a></li>
+  <li><a href="#adjusted-model-adjusted-hrs" id="toc-adjusted-model-adjusted-hrs" class="nav-link" data-scroll-target="#adjusted-model-adjusted-hrs"><span class="header-section-number">10.2.2</span> Adjusted Model (Adjusted HRs)</a></li>
+  </ul>
+</li>
+  <li><a href="#saving-model-results" id="toc-saving-model-results" class="nav-link" data-scroll-target="#saving-model-results"><span class="header-section-number">10.3</span> Saving Model Results</a></li>
+  <li><a href="#chapter-summary-and-next-steps" id="toc-chapter-summary-and-next-steps" class="nav-link" data-scroll-target="#chapter-summary-and-next-steps"><span class="header-section-number">10.4</span> Chapter Summary and Next Steps</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Survival Analysis</span>
+</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><hr>
+<p>This section performs the main survival analyses to investigate the association between early smoking initiation and all-cause mortality. We will first visualize survival probabilities using Kaplan-Meier curves and then estimate hazard ratios (HRs) with survey-weighted Cox Proportional Hazards models. This section directly reproduces the “Statistical Analysis” and “Results” sections of the published paper. Specifically, Figure 1 (Kaplan-Meier curve) and Figure 2 (the crude/adjusted HRs) of the original paper.</p>
+<p>This chapter will reproduce the paper’s core survival analyses using the following methods:</p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;">Analysis/Visualization</th>
+<th style="text-align: left;">Key R Function(s)</th>
+<th style="text-align: left;">Purpose</th>
+<th style="text-align: left;">Reproduces</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Kaplan-Meier Curve</strong></td>
+<td style="text-align: left;">
+<code>svykm()</code>, <code>svylogrank()</code>
+</td>
+<td style="text-align: left;">Visualize and test differences in survival probabilities between exposure groups.</td>
+<td style="text-align: left;"><strong>Figure 1</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Crude Cox Model</strong></td>
+<td style="text-align: left;"><code>svycoxph()</code></td>
+<td style="text-align: left;">Estimate the unadjusted association between smoking initiation and mortality.</td>
+<td style="text-align: left;">
+<strong>Figure 2</strong> (Crude HRs)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Adjusted Cox Model</strong></td>
+<td style="text-align: left;"><code>svycoxph()</code></td>
+<td style="text-align: left;">Estimate the association while controlling for confounders (sex, race, survey year).</td>
+<td style="text-align: left;">
+<strong>Figure 2</strong> (Adjusted HRs)</td>
+</tr>
+</tbody>
+</table>
+<div class="cell" data-hash="08-survival-analysis_cache/html/libraries_e01315c5e7762df314c4c11e7deebf19">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Load required packages</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(Publish) </span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(survey) </span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">options</span>(<span class="at">survey.want.obsolete=</span><span class="cn">TRUE</span>)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="fu">library</span>(survival)</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="fu">require</span>(knitr)</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="fu">require</span>(kableExtra)</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="fu">require</span>(stringr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 1: Load Data and Survey Design Object</li>
+</ul>
+<p>We begin by loading the final, complete-case analytic dataset (<code>dat.complete</code>) and the survey design object (<code>w.design0</code>) that were created in the previous chapters. The <code>w.design0</code> object is essential for ensuring our analysis accounts for the complex NHANES survey design.</p>
+<div class="cell" data-hash="08-survival-analysis_cache/html/load_1cad5540102e478cc074a2ee532be192">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Load the complete case analytic dataset</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">load</span>(<span class="at">file =</span> <span class="st">"data/dat.complete.RData"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Load the subsetted survey design object</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>w.design0 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="st">"data/w.design0.rds"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6"></a></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># Verify the dimensions of the loaded survey design object</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="fu">dim</span>(w.design0)</span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="co">#&gt; [1] 50549    19</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<section id="kaplan-meier-survival-analysis-figure-1" class="level2" data-number="10.1"><h2 data-number="10.1" class="anchored" data-anchor-id="kaplan-meier-survival-analysis-figure-1">
+<span class="header-section-number">10.1</span> Kaplan-Meier Survival Analysis (Figure 1)</h2>
+<ul>
+<li>R Code Chunk 2: Kaplan-Meier Curves and Log-Rank Test</li>
+</ul>
+<p><strong>Kaplan-Meier Curves</strong></p>
+<p>The following code visualizes the survival probabilities over time using Kaplan-Meier (KM) curves, stratified by the <code>exposure.cat</code> (age at smoking initiation) variable. The KM curves illustrate the proportion of participants surviving over their follow-up time from birth. The <code>svykm()</code> function from the <code>survey</code> package is used to calculate the survival estimates while accounting for the complex survey design. The resulting plot reproduces the trends shown in Figure 1 of the original paper.</p>
+<div class="cell" data-hash="08-survival-analysis_cache/html/KM_a53cec8b0c8cf951393bbc144a343c75">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co"># Define the survival formula</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>formulax0 <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">Surv</span>(stime.since.birth, status_all) </span>
+<span id="cb3-4"><a href="#cb3-4"></a>                        <span class="sc">~</span> exposure.cat)</span>
+<span id="cb3-5"><a href="#cb3-5"></a></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co"># Calculate survey-weighted Kaplan-Meier curves</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>sA <span class="ot">&lt;-</span> <span class="fu">svykm</span>(formulax0, <span class="at">design =</span> w.design0)</span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="fu">saveRDS</span>(sA, <span class="at">file =</span> <span class="st">"data/sA.rds"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9"></a></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co"># Dynamically set the number of colors for the legend</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a>dummy <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(<span class="fu">as.factor</span>(w.design0<span class="sc">$</span>variables<span class="sc">$</span>exposure.cat)))</span>
+<span id="cb3-12"><a href="#cb3-12"></a></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="co"># Plot the Kaplan-Meier curves</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="fu">plot</span>(sA, <span class="at">pars =</span> <span class="fu">list</span>(<span class="at">col =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span>dummy)),</span>
+<span id="cb3-15"><a href="#cb3-15"></a>     <span class="at">xlab =</span> <span class="st">"Time"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16"></a>     <span class="at">ylab =</span> <span class="st">"Proportion surviving"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17"></a>     <span class="at">main =</span> <span class="st">"Survey-featured Kaplan-Meier Curve:</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="st">     All-Cause Mortality"</span>)</span>
+<span id="cb3-19"><a href="#cb3-19"></a><span class="fu">legend</span>(<span class="st">"bottomleft"</span>, </span>
+<span id="cb3-20"><a href="#cb3-20"></a>       <span class="fu">levels</span>(<span class="fu">as.factor</span>(w.design0<span class="sc">$</span>variables<span class="sc">$</span>exposure.cat)),</span>
+<span id="cb3-21"><a href="#cb3-21"></a>       <span class="at">col =</span> (<span class="dv">1</span><span class="sc">:</span>dummy), <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb3-22"><a href="#cb3-22"></a>       <span class="at">bty =</span> <span class="st">"n"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="08-survival-analysis_files/figure-html/KM-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Survey-weighted Kaplan-Meier curves for all-cause mortality, stratified by age of smoking initiation (reproduces Figure 1 from the paper).</figcaption></figure>
+</div>
+</div>
+</div>
+<p><strong>Log-Rank Test</strong></p>
+<p>After plotting the curves, a survey-weighted log-rank test is performed using <code>svylogrank()</code> to statistically determine if there are significant differences in survival curves among the exposure groups. A significant p-value from this test would indicate a statistically significant difference in survival experiences between the age groups of smoking initiation. The paper states that the log-rank test was significant.</p>
+<div class="cell" data-hash="08-survival-analysis_cache/html/log-rank_94a3a8c60c974bd9d015d5b71186f52b">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Perform the survey-weighted log-rank test</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>lrt <span class="ot">&lt;-</span> <span class="fu">svylogrank</span>(formulax0, <span class="at">design =</span> <span class="fu">subset</span>(w.design0, </span>
+<span id="cb4-3"><a href="#cb4-3"></a>                                             survey.weight.new <span class="sc">&gt;</span> <span class="dv">0</span>))</span>
+<span id="cb4-4"><a href="#cb4-4"></a></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="co"># Display the rounded p-value from the log-rank test</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="fu">round</span>(lrt[[<span class="dv">2</span>]],<span class="dv">2</span>)</span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="co">#&gt;  Chisq      p </span></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="co">#&gt; 293.72   0.00</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>To present these results more formally, the following code uses <code><a href="https://rdrr.io/pkg/knitr/man/kable.html">knitr::kable()</a></code> to display the full test output, including the Chi-squared statistic and degrees of freedom, in a clean table.</p>
+<div class="cell" data-hash="08-survival-analysis_cache/html/logrank-Results_e8420ac0ba42f667525cb4495fa3396b">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">kable</span>(lrt[[<span class="dv">1</span>]],</span>
+<span id="cb5-2"><a href="#cb5-2"></a>      <span class="at">booktabs =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb5-3"><a href="#cb5-3"></a>      <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Test Statistic"</span>, <span class="st">"Standard Error"</span>, <span class="st">"Z-value"</span>, <span class="st">"p-value"</span>),</span>
+<span id="cb5-4"><a href="#cb5-4"></a>      <span class="at">caption=</span><span class="st">"Survey-weighted log-rank test for main analysis comparing survival distributions by age of smoking initiation."</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">"hold_position"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Survey-weighted log-rank test for main analysis comparing survival distributions by age of smoking initiation.</caption>
+<thead><tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Test Statistic</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Standard Error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Z-value</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p-value</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">146771.4</td>
+<td style="text-align: right;">33970.03</td>
+<td style="text-align: right;">4.32</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1057040.8</td>
+<td style="text-align: right;">110866.82</td>
+<td style="text-align: right;">9.53</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1215922.9</td>
+<td style="text-align: right;">137852.17</td>
+<td style="text-align: right;">8.82</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">259155.7</td>
+<td style="text-align: right;">128215.04</td>
+<td style="text-align: right;">2.02</td>
+<td style="text-align: right;">0.04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">235676.6</td>
+<td style="text-align: right;">91478.11</td>
+<td style="text-align: right;">2.58</td>
+<td style="text-align: right;">0.01</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr></section><section id="cox-proportional-hazards-models-figure-2" class="level2" data-number="10.2"><h2 data-number="10.2" class="anchored" data-anchor-id="cox-proportional-hazards-models-figure-2">
+<span class="header-section-number">10.2</span> Cox Proportional Hazards Models (Figure 2)</h2>
+<section id="unadjusted-model-crude-hrs" class="level3" data-number="10.2.1"><h3 data-number="10.2.1" class="anchored" data-anchor-id="unadjusted-model-crude-hrs">
+<span class="header-section-number">10.2.1</span> Unadjusted Model (Crude HRs)</h3>
+<ul>
+<li>R Code Chunk 3: Unadjusted Cox Model (for Comparison)</li>
+</ul>
+<p>The following code demonstrates a standard, un-weighted Cox proportional hazards model using base R’s <code>coxph()</code> function on the <code>dat.complete</code> dataset. This model does not account for the complex survey design of NHANES and is included as a baseline, primarily for comparison or to understand how unweighted models would be run. The <code>publish()</code> function is used to format the model output for easier interpretation.</p>
+<div class="cell" data-hash="08-survival-analysis_cache/html/unadjustedModel_9e25aa0f240b9eebc1461182f12cf881">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Fit an un-weighted Cox Proportional Hazards model</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>fit0 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(stime.since.birth, status_all) <span class="sc">~</span> exposure.cat, </span>
+<span id="cb6-3"><a href="#cb6-3"></a>              <span class="at">data =</span> dat.complete)</span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co"># Use 'publish' to format the output for display</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="fu">publish</span>(fit0)</span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="co">#&gt;      Variable             Units HazardRatio       CI.95 p-value </span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co">#&gt;  exposure.cat      Never smoked         Ref                     </span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt;               Started before 10        2.44 [1.99;3.00]  &lt;0.001 </span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="co">#&gt;                Started at 10-14        2.37 [2.19;2.58]  &lt;0.001 </span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="co">#&gt;                Started at 15-17        1.92 [1.79;2.06]  &lt;0.001 </span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co">#&gt;                Started at 18-20        1.51 [1.40;1.62]  &lt;0.001 </span></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="co">#&gt;                Started after 20        1.51 [1.39;1.64]  &lt;0.001</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 4: Unadjusted Survey-Weighted Cox Proportional Hazards Model</li>
+</ul>
+<p>The following code fits the unadjusted Cox proportional hazards model, but it uses <code>svycoxph()</code> from the <code>survey</code> package to account for the complex NHANES survey design. This model examines the crude association between smoking initiation categories and all-cause mortality, producing Hazard Ratios. The <code>publish()</code> function is used to format the model output for easier interpretation. The HRs from this model contribute to the “Crude” estimates shown in Figure 2 of the paper.</p>
+<div class="cell" data-hash="08-survival-analysis_cache/html/unadjusted-survey_0ec3cac7ce011e55ced325569e160874">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Fit the unadjusted survey-weighted Cox Proportional Hazards model</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>fit0 <span class="ot">&lt;-</span> <span class="fu">svycoxph</span>(<span class="fu">Surv</span>(stime.since.birth, status_all) <span class="sc">~</span> exposure.cat, </span>
+<span id="cb7-3"><a href="#cb7-3"></a>                 <span class="at">design =</span> w.design0)</span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="co"># Use 'publish' to format the output for display</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>f0 <span class="ot">&lt;-</span> <span class="fu">publish</span>(fit0) </span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="co">#&gt; Stratified 1 - level Cluster Sampling design (with replacement)</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co">#&gt; With (301) clusters.</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="co">#&gt; subset(w.design, miss == 0 &amp; survey.weight.new &gt; 0)</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="co">#&gt;      Variable             Units HazardRatio       CI.95 p-value </span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="co">#&gt;  exposure.cat      Never smoked         Ref                     </span></span>
+<span id="cb7-12"><a href="#cb7-12"></a><span class="co">#&gt;               Started before 10        3.01 [2.29;3.95]  &lt;0.001 </span></span>
+<span id="cb7-13"><a href="#cb7-13"></a><span class="co">#&gt;                Started at 10-14        2.60 [2.32;2.92]  &lt;0.001 </span></span>
+<span id="cb7-14"><a href="#cb7-14"></a><span class="co">#&gt;                Started at 15-17        2.07 [1.88;2.28]  &lt;0.001 </span></span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="co">#&gt;                Started at 18-20        1.55 [1.40;1.72]  &lt;0.001 </span></span>
+<span id="cb7-16"><a href="#cb7-16"></a><span class="co">#&gt;                Started after 20        1.60 [1.45;1.76]  &lt;0.001</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 5: Process Unadjusted Hazard Ratios for Plotting</li>
+</ul>
+<p>The output from <code>publish()</code> is a formatted table, but for plotting, we need a clean data frame of the results.</p>
+<p>The following code extracts the Hazard Ratios and their 95% Confidence Intervals from the unadjusted survey-weighted Cox Model (<code>f0</code>). The <code>stringr</code> package is used to parse the confidence interval strings into separate lower and upper bound numeric columns.</p>
+<div class="cell" data-hash="08-survival-analysis_cache/html/unadjustedHRs_754f80a06f8b13d55b87819d799611f5">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Select HR and CI columns for exposure categories from 'f0'</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>f0r <span class="ot">&lt;-</span> f0<span class="sc">$</span>regressionTable[<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>,<span class="fu">c</span>(<span class="st">"HazardRatio"</span>,<span class="st">"CI.95"</span>)] </span>
+<span id="cb8-3"><a href="#cb8-3"></a></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co"># Add a 'group' column to label these results as "Crude" for plotting</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>f0r<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="st">"Crude"</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="co"># Extract lower and upper bounds from the CI string</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a>ci <span class="ot">&lt;-</span> <span class="fu">str_extract_all</span>(f0r[,<span class="dv">2</span>], <span class="st">'</span><span class="sc">\\</span><span class="st">d+([.,]</span><span class="sc">\\</span><span class="st">d+)?'</span>, <span class="at">simplify =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-9"><a href="#cb8-9"></a>f0r<span class="sc">$</span>CI.l <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(ci[,<span class="dv">1</span>])) <span class="co"># Lower bound</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a>f0r<span class="sc">$</span>CI.u <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(ci[,<span class="dv">2</span>])) <span class="co"># Upper bound</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="co"># Rename columns for consistency in plotting</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="fu">names</span>(f0r) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean"</span>,<span class="st">"CI.95"</span>,<span class="st">"group"</span>,<span class="st">"lower"</span>,<span class="st">"upper"</span>)</span>
+<span id="cb8-14"><a href="#cb8-14"></a></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="co"># Display the processed data frame</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a>f0r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["mean"],"name":[1],"type":["chr"],"align":["left"]},{"label":["CI.95"],"name":[2],"type":["chr"],"align":["left"]},{"label":["group"],"name":[3],"type":["chr"],"align":["left"]},{"label":["lower"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["upper"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"3.01","2":"[2.29;3.95]","3":"Crude","4":"2.29","5":"3.95","_rn_":"2"},{"1":"2.60","2":"[2.32;2.92]","3":"Crude","4":"2.32","5":"2.92","_rn_":"3"},{"1":"2.07","2":"[1.88;2.28]","3":"Crude","4":"1.88","5":"2.28","_rn_":"4"},{"1":"1.55","2":"[1.40;1.72]","3":"Crude","4":"1.40","5":"1.72","_rn_":"5"},{"1":"1.60","2":"[1.45;1.76]","3":"Crude","4":"1.45","5":"1.76","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<hr></section><section id="adjusted-model-adjusted-hrs" class="level3" data-number="10.2.2"><h3 data-number="10.2.2" class="anchored" data-anchor-id="adjusted-model-adjusted-hrs">
+<span class="header-section-number">10.2.2</span> Adjusted Model (Adjusted HRs)</h3>
+<ul>
+<li>R Code Chunk 6: Adjusted Survey-Weighted Cox Proportional Hazards Model</li>
+</ul>
+<p>The following code fits the adjusted Cox proportional hazards model, accounting for the complex survey design and controlling for <strong>key covariates</strong>. As described in the paper, the model is adjusted to account for <strong>sex, race/ethnicity, and survey cycle</strong>. This model estimates the adjusted Hazard Ratios, which contribute to the “Adjusted” estimates shown in Figure 2 of the paper.</p>
+<div class="cell" data-hash="08-survival-analysis_cache/html/adjusted-survey_de148355354c72dcb08d6a87de765518">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Fit the adjusted survey-weighted Cox Proportional Hazards model</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">svycoxph</span>(<span class="fu">Surv</span>(stime.since.birth, status_all) <span class="sc">~</span> exposure.cat <span class="sc">+</span> </span>
+<span id="cb9-3"><a href="#cb9-3"></a>                   sex <span class="sc">+</span> race <span class="sc">+</span> year.cat, <span class="at">design =</span> w.design0)</span>
+<span id="cb9-4"><a href="#cb9-4"></a></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="co"># Use 'publish' to format the output for display</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a>f1 <span class="ot">&lt;-</span> <span class="fu">publish</span>(fit1) <span class="co"># Store the published output</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="co">#&gt; Stratified 1 - level Cluster Sampling design (with replacement)</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="co">#&gt; With (301) clusters.</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a><span class="co">#&gt; subset(w.design, miss == 0 &amp; survey.weight.new &gt; 0)</span></span>
+<span id="cb9-10"><a href="#cb9-10"></a><span class="co">#&gt;      Variable             Units HazardRatio       CI.95   p-value </span></span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="co">#&gt;  exposure.cat      Never smoked         Ref                       </span></span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="co">#&gt;               Started before 10        2.71 [2.05;3.58]   &lt; 0.001 </span></span>
+<span id="cb9-13"><a href="#cb9-13"></a><span class="co">#&gt;                Started at 10-14        2.38 [2.11;2.68]   &lt; 0.001 </span></span>
+<span id="cb9-14"><a href="#cb9-14"></a><span class="co">#&gt;                Started at 15-17        1.96 [1.77;2.16]   &lt; 0.001 </span></span>
+<span id="cb9-15"><a href="#cb9-15"></a><span class="co">#&gt;                Started at 18-20        1.48 [1.33;1.64]   &lt; 0.001 </span></span>
+<span id="cb9-16"><a href="#cb9-16"></a><span class="co">#&gt;                Started after 20        1.54 [1.39;1.70]   &lt; 0.001 </span></span>
+<span id="cb9-17"><a href="#cb9-17"></a><span class="co">#&gt;           sex              Male         Ref                       </span></span>
+<span id="cb9-18"><a href="#cb9-18"></a><span class="co">#&gt;                          Female        0.75 [0.70;0.80]   &lt; 0.001 </span></span>
+<span id="cb9-19"><a href="#cb9-19"></a><span class="co">#&gt;          race             White         Ref                       </span></span>
+<span id="cb9-20"><a href="#cb9-20"></a><span class="co">#&gt;                           Black        1.59 [1.47;1.73]   &lt; 0.001 </span></span>
+<span id="cb9-21"><a href="#cb9-21"></a><span class="co">#&gt;                        Hispanic        1.03 [0.93;1.15]   0.55581 </span></span>
+<span id="cb9-22"><a href="#cb9-22"></a><span class="co">#&gt;                          Others        1.15 [0.97;1.37]   0.10079 </span></span>
+<span id="cb9-23"><a href="#cb9-23"></a><span class="co">#&gt;      year.cat         1999-2000         Ref                       </span></span>
+<span id="cb9-24"><a href="#cb9-24"></a><span class="co">#&gt;                       2001-2002        0.96 [0.86;1.08]   0.50457 </span></span>
+<span id="cb9-25"><a href="#cb9-25"></a><span class="co">#&gt;                       2003-2004        0.84 [0.75;0.94]   0.00328 </span></span>
+<span id="cb9-26"><a href="#cb9-26"></a><span class="co">#&gt;                       2005-2006        0.76 [0.67;0.85]   &lt; 0.001 </span></span>
+<span id="cb9-27"><a href="#cb9-27"></a><span class="co">#&gt;                       2007-2008        0.77 [0.67;0.90]   &lt; 0.001 </span></span>
+<span id="cb9-28"><a href="#cb9-28"></a><span class="co">#&gt;                       2009-2010        0.68 [0.59;0.78]   &lt; 0.001 </span></span>
+<span id="cb9-29"><a href="#cb9-29"></a><span class="co">#&gt;                       2011-2012        0.62 [0.51;0.76]   &lt; 0.001 </span></span>
+<span id="cb9-30"><a href="#cb9-30"></a><span class="co">#&gt;                       2013-2014        0.58 [0.48;0.69]   &lt; 0.001 </span></span>
+<span id="cb9-31"><a href="#cb9-31"></a><span class="co">#&gt;                       2015-2016        0.35 [0.27;0.45]   &lt; 0.001 </span></span>
+<span id="cb9-32"><a href="#cb9-32"></a><span class="co">#&gt;                       2017-2018        0.20 [0.13;0.29]   &lt; 0.001</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 7: Process Adjusted Hazard Ratios for Plotting</li>
+</ul>
+<p>The following code follows the similar processing done for the unadjusted model, but applies it to the results of the adjusted survey-weighted Cox model.</p>
+<div class="cell" data-hash="08-survival-analysis_cache/html/adjustedHRs_68fde33c8e45ead0fde89d89c29120dc">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Select Hazard Ratio and CI columns for exposure categories from 'f1'</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>f1r <span class="ot">&lt;-</span> f1<span class="sc">$</span>regressionTable[<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>,<span class="fu">c</span>(<span class="st">"HazardRatio"</span>,<span class="st">"CI.95"</span>)]</span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="co"># Add a 'group' column to label these results as "Adjusted"</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a>f1r<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="st">"Adjusted"</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a></span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="co"># Extract lower and upper bounds from the CI string</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a>ci <span class="ot">&lt;-</span> <span class="fu">str_extract_all</span>(f1r[,<span class="dv">2</span>], <span class="st">'</span><span class="sc">\\</span><span class="st">d+([.,]</span><span class="sc">\\</span><span class="st">d+)?'</span>, <span class="at">simplify =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-9"><a href="#cb10-9"></a>f1r<span class="sc">$</span>CI.l <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(ci[,<span class="dv">1</span>]))</span>
+<span id="cb10-10"><a href="#cb10-10"></a>f1r<span class="sc">$</span>CI.u <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(ci[,<span class="dv">2</span>]))</span>
+<span id="cb10-11"><a href="#cb10-11"></a></span>
+<span id="cb10-12"><a href="#cb10-12"></a><span class="co"># Rename columns for consistency in plotting</span></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="fu">names</span>(f1r) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean"</span>,<span class="st">"CI.95"</span>,<span class="st">"group"</span>,<span class="st">"lower"</span>,<span class="st">"upper"</span>)</span>
+<span id="cb10-14"><a href="#cb10-14"></a></span>
+<span id="cb10-15"><a href="#cb10-15"></a><span class="co"># Display the processed data frame</span></span>
+<span id="cb10-16"><a href="#cb10-16"></a>f1r </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["mean"],"name":[1],"type":["chr"],"align":["left"]},{"label":["CI.95"],"name":[2],"type":["chr"],"align":["left"]},{"label":["group"],"name":[3],"type":["chr"],"align":["left"]},{"label":["lower"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["upper"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"2.71","2":"[2.05;3.58]","3":"Adjusted","4":"2.05","5":"3.58","_rn_":"2"},{"1":"2.38","2":"[2.11;2.68]","3":"Adjusted","4":"2.11","5":"2.68","_rn_":"3"},{"1":"1.96","2":"[1.77;2.16]","3":"Adjusted","4":"1.77","5":"2.16","_rn_":"4"},{"1":"1.48","2":"[1.33;1.64]","3":"Adjusted","4":"1.33","5":"1.64","_rn_":"5"},{"1":"1.54","2":"[1.39;1.70]","3":"Adjusted","4":"1.39","5":"1.70","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<hr></section></section><section id="saving-model-results" class="level2" data-number="10.3"><h2 data-number="10.3" class="anchored" data-anchor-id="saving-model-results">
+<span class="header-section-number">10.3</span> Saving Model Results</h2>
+<ul>
+<li>R Code Chunk 8: Save Processed Results</li>
+</ul>
+<p>Finally, we save the two processed data frames (<code>f0r</code> and <code>f1r</code>) containing the crude and adjusted results. These files will be loaded in the next section to create the plot that visualizes these findings (Figure 2 of paper).</p>
+<div class="cell" data-hash="08-survival-analysis_cache/html/save-df_c91d171bd3460290c7398e7f785b490e">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Save the processed HR data frames for the next chapter</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="fu">saveRDS</span>(f0r, <span class="at">file =</span> <span class="st">"data/f0r.rds"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="fu">saveRDS</span>(f1r, <span class="at">file =</span> <span class="st">"data/f1r.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>This completes the survival analysis section of the statistical analysis stage.</p>
+<hr></section><section id="chapter-summary-and-next-steps" class="level2" data-number="10.4"><h2 data-number="10.4" class="anchored" data-anchor-id="chapter-summary-and-next-steps">
+<span class="header-section-number">10.4</span> Chapter Summary and Next Steps</h2>
+<p>We have now completed the main survival analysis. We successfully reproduced the Kaplan-Meier curves (Figure 1 from the paper) to visualize survival probabilities and fitted both crude and adjusted survey-weighted Cox models to estimate the hazard ratios, replicating the core findings presented in Figure 2.</p>
+<p>The results show a clear association between early smoking initiation and mortality. The next logical step, covered in the “Effect Modification Analysis” chapter, is to investigate whether this association differs across key demographic groups.</p>
+
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./07-descriptive-analysis.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Descriptive Analysis</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./09-effect-modification.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Effect Modification Analysis</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

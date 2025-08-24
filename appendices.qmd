@@ -1,0 +1,40 @@
+# Appendices
+
+This section contains supplementary materials, including a glossary of key terms and additional exploratory analyses referenced in the main text.
+
+```{r setup, cache=TRUE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+  fig.path = "images/sub/",
+  message = FALSE,
+  warning = FALSE,
+  cache = TRUE
+)
+```
+
+```{r libraries, cache=TRUE, include=FALSE}
+# Load required packages
+library(dplyr)
+library(ggplot2) 
+```
+
+---
+
+## Appendix A: Glossary of Key Terms 📖
+
+-   **Hazard Ratio (HR)**: A measure of effect in survival analysis. It represents the ratio of the hazard rates corresponding to the conditions described by two levels of an explanatory variable. An HR of 2, for example, means that at any given time, the group of interest is twice as likely to experience the event (e.g., death) as the comparison group. An HR of 1 indicates no difference in risk.
+
+-   **Kaplan-Meier Curve**: A non-parametric statistic used to estimate the survival function from lifetime data. The curve is a series of horizontal steps of declining magnitude which, when taken together, approximates the true survival function for that population. It allows for a visual comparison of survival probabilities between different groups over time.
+
+-   **Primary Sampling Units (PSUs)**: The first stage of sampling in a multi-stage survey design like NHANES. PSUs are typically large geographic areas (like counties). The survey first samples a set of PSUs, and then samples smaller units within them. Accounting for PSUs is critical for accurate variance estimation.
+
+-   **Relative Excess Risk due to Interaction (RERI)**: A measure used to assess additive interaction between two exposures. RERI > 0 indicates a positive interaction (synergism), meaning the combined effect of the two exposures is greater than the sum of their individual effects. RERI < 0 indicates a negative interaction (antagonism).
+
+
+---
+
+## Chapter Summary 
+
+This appendix provided supplementary materials to support the analyses. It begins with a glossary of key statistical and epidemiological terms used throughout the book to aid the reader's understanding.
+
+
+        

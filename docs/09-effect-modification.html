@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Analyzing Early Smoking Initiation and Mortality - 11&nbsp; Effect Modification Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./10-sensitivity-analysis.html" rel="next">
+<link href="./08-survival-analysis.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><script src="site_libs/kePrint-0.0.1/kePrint.js"></script><link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+</head>
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/ubc_logo.png" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">NHANES Mortality Analysis</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools ms-auto">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-survey-design.html">Statistical Analysis</a></li><li class="breadcrumb-item"><a href="./09-effect-modification.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Effect Modification Analysis</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reproducing the Analysis: Early Smoking Initiation and Mortality</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Introduction and Background</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Overview of the Study</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-nhanes-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">NHANES Data Overview</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Data Preparation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03a-download-merge.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data Download and Merging</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03b-mortality-merge.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Mortality and NHANES Merging</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-variable-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Variable Definitions and Cleaning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-cohort-definition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Cohort Definition</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Statistical Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-survey-design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Survey Design Specification</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-descriptive-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Descriptive Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-survival-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Survival Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-effect-modification.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Effect Modification Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-sensitivity-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sensitivity Analyses</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Discussion</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-discussion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Discussion of Results</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-limitations-future.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Limitations and Future Directions</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Appendices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#investigating-effect-modification-by-raceethnicity" id="toc-investigating-effect-modification-by-raceethnicity" class="nav-link active" data-scroll-target="#investigating-effect-modification-by-raceethnicity"><span class="header-section-number">11.1</span> Investigating Effect Modification by Race/Ethnicity</a></li>
+  <li><a href="#investigating-effect-modification-by-sex" id="toc-investigating-effect-modification-by-sex" class="nav-link" data-scroll-target="#investigating-effect-modification-by-sex"><span class="header-section-number">11.2</span> Investigating Effect Modification by Sex</a></li>
+  <li><a href="#visualizing-the-results-figure-2" id="toc-visualizing-the-results-figure-2" class="nav-link" data-scroll-target="#visualizing-the-results-figure-2"><span class="header-section-number">11.3</span> Visualizing the Results (Figure 2)</a></li>
+  <li><a href="#quantifying-additive-interaction-reri" id="toc-quantifying-additive-interaction-reri" class="nav-link" data-scroll-target="#quantifying-additive-interaction-reri"><span class="header-section-number">11.4</span> Quantifying Additive Interaction (RERI)</a></li>
+  <li><a href="#chapter-summary-and-next-steps" id="toc-chapter-summary-and-next-steps" class="nav-link" data-scroll-target="#chapter-summary-and-next-steps"><span class="header-section-number">11.5</span> Chapter Summary and Next Steps</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Effect Modification Analysis</span>
+</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><hr>
+<p>This section explains the effect modification analysis, which investigates whether the association between early smoking initiation and all-cause mortality is changed by key demographic variables like race/ethnicity and sex. Effect modification occurs when the strength or direction of an association differs across levels of another variable.</p>
+<p>This is investigated through 2 ways.</p>
+<ol type="1">
+<li>Interaction Terms : Including interaction terms in our survey-weighted Cox proportional hazards models and performing statistical tests for these interaction terms.</li>
+<li>RERI (Relative Excess Risk due to Interaction) : Calculating this measure to assess additive interaction, which provides a different perspective on how factors combine their effects.</li>
+</ol>
+<p>The key methods are summarized below:</p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;">Analysis</th>
+<th style="text-align: left;">Key R Function(s)</th>
+<th style="text-align: left;">Purpose</th>
+<th style="text-align: left;">Reproduces</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Effect Modification by Race/Ethnicity</strong></td>
+<td style="text-align: left;"><code>svycoxph()</code></td>
+<td style="text-align: left;">Estimate stratum-specific HRs for each racial/ethnic group.</td>
+<td style="text-align: left;">
+<strong>Figure 2</strong> (Race-specific HRs)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Effect Modification by Sex</strong></td>
+<td style="text-align: left;"><code>svycoxph()</code></td>
+<td style="text-align: left;">Estimate stratum-specific HRs for males and females.</td>
+<td style="text-align: left;">
+<strong>Figure 2</strong> (Sex-specific HRs)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Interaction Tests</strong></td>
+<td style="text-align: left;">
+<code>svyglm()</code>, <code>regTermTest()</code>
+</td>
+<td style="text-align: left;">Formally test if the effect of smoking initiation differs across groups.</td>
+<td style="text-align: left;">
+<strong>Paper’s p-values</strong> for interaction</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Forest Plot</strong></td>
+<td style="text-align: left;"><code>ggplot()</code></td>
+<td style="text-align: left;">Visualize and compare all crude, adjusted, and stratum-specific HRs.</td>
+<td style="text-align: left;">
+<strong>Figure 2</strong> (Complete Plot)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Additive Interaction (RERI)</strong></td>
+<td style="text-align: left;">
+<code>reri.f()</code> (custom)</td>
+<td style="text-align: left;">Quantify the excess risk due to the combined presence of two factors.</td>
+<td style="text-align: left;"><strong>Appendix Tables 4 &amp; 5</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="cell" data-hash="09-effect-modification_cache/html/libraries_11ca209eb44abb95e3b319593d4bb22d">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Load required packages</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(Publish)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(survey)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">options</span>(<span class="at">survey.want.obsolete=</span><span class="cn">TRUE</span>)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="fu">library</span>(survival)</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="fu">require</span>(knitr)</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="fu">require</span>(kableExtra)</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="fu">library</span>(expss)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 1: Load Data and Processed Results</li>
+</ul>
+<p>The following code loads the essential <code>w.design0</code> survey design object, which was created and saved in the previous section. This object is important for all subsequent survey-weighted analyses coming up. Additionally, it ensures that <code>f0r</code> and <code>f1r</code> (the processed Hazard Ratios from previous section) are available for binding and plotting.</p>
+<div class="cell" data-hash="09-effect-modification_cache/html/load_63f7532f87ff3ed55143340b7b5317a4">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Load the subsetted survey design object</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>w.design0 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="st">"data/w.design0.rds"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Load f0r and f1r from previous section</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>f0r <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/f0r.rds"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6"></a>f1r <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/f1r.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<section id="investigating-effect-modification-by-raceethnicity" class="level2" data-number="11.1"><h2 data-number="11.1" class="anchored" data-anchor-id="investigating-effect-modification-by-raceethnicity">
+<span class="header-section-number">11.1</span> Investigating Effect Modification by Race/Ethnicity</h2>
+<ul>
+<li>R Code Chunk 2: Effect Modification by Race/Ethnicity</li>
+</ul>
+<p>The following code fits a survey-weighted Cox proportional hazards model, including an interaction term between <code>exposure.cat</code> (smoking initiation age) and <code>race</code>. This model is used to assess if the association between early smoking initiation and mortality differs across various racial/ethnic levels or groups.</p>
+<div class="cell" data-hash="09-effect-modification_cache/html/EM-race_eeac2b98faff206a3e37771cf9b8fec0">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Effect modification by race</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">svycoxph</span>(<span class="fu">Surv</span>(stime.since.birth, status_all) <span class="sc">~</span> exposure.cat<span class="sc">*</span>race </span>
+<span id="cb3-3"><a href="#cb3-3"></a>                 <span class="sc">+</span> sex <span class="sc">+</span> year.cat, <span class="at">design =</span> w.design0)</span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co"># Publish the results for later processing</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>f2 <span class="ot">&lt;-</span> <span class="fu">publish</span>(fit2)</span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co">#&gt; Stratified 1 - level Cluster Sampling design (with replacement)</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co">#&gt; With (301) clusters.</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="co">#&gt; subset(w.design, miss == 0 &amp; survey.weight.new &gt; 0)</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co">#&gt;                                                         Variable     Units HazardRatio        CI.95   p-value </span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="co">#&gt;                                                              sex      Male         Ref                        </span></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="co">#&gt;                                                                     Female        0.74  [0.70;0.79]   &lt; 0.001 </span></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="co">#&gt;                                                         year.cat 1999-2000         Ref                        </span></span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="co">#&gt;                                                                  2001-2002        0.96  [0.86;1.08]   0.52079 </span></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="co">#&gt;                                                                  2003-2004        0.84  [0.74;0.94]   0.00236 </span></span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="co">#&gt;                                                                  2005-2006        0.75  [0.67;0.84]   &lt; 0.001 </span></span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="co">#&gt;                                                                  2007-2008        0.77  [0.66;0.90]   &lt; 0.001 </span></span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="co">#&gt;                                                                  2009-2010        0.68  [0.59;0.78]   &lt; 0.001 </span></span>
+<span id="cb3-19"><a href="#cb3-19"></a><span class="co">#&gt;                                                                  2011-2012        0.62  [0.51;0.76]   &lt; 0.001 </span></span>
+<span id="cb3-20"><a href="#cb3-20"></a><span class="co">#&gt;                                                                  2013-2014        0.58  [0.48;0.69]   &lt; 0.001 </span></span>
+<span id="cb3-21"><a href="#cb3-21"></a><span class="co">#&gt;                                                                  2015-2016        0.34  [0.26;0.45]   &lt; 0.001 </span></span>
+<span id="cb3-22"><a href="#cb3-22"></a><span class="co">#&gt;                                                                  2017-2018        0.19  [0.13;0.29]   &lt; 0.001 </span></span>
+<span id="cb3-23"><a href="#cb3-23"></a><span class="co">#&gt;                 exposure.cat(Never smoked): race(Black vs White)                  1.82  [1.63;2.04]   &lt; 0.001 </span></span>
+<span id="cb3-24"><a href="#cb3-24"></a><span class="co">#&gt;              exposure.cat(Never smoked): race(Hispanic vs White)                  1.24  [1.06;1.45]   0.00596 </span></span>
+<span id="cb3-25"><a href="#cb3-25"></a><span class="co">#&gt;                exposure.cat(Never smoked): race(Others vs White)                  1.21  [0.95;1.54]   0.12522 </span></span>
+<span id="cb3-26"><a href="#cb3-26"></a><span class="co">#&gt;            exposure.cat(Started before 10): race(Black vs White)                  1.11  [0.54;2.29]   0.77275 </span></span>
+<span id="cb3-27"><a href="#cb3-27"></a><span class="co">#&gt;         exposure.cat(Started before 10): race(Hispanic vs White)                  0.40  [0.17;0.90]   0.02774 </span></span>
+<span id="cb3-28"><a href="#cb3-28"></a><span class="co">#&gt;           exposure.cat(Started before 10): race(Others vs White)                  1.74  [0.65;4.69]   0.27143 </span></span>
+<span id="cb3-29"><a href="#cb3-29"></a><span class="co">#&gt;             exposure.cat(Started at 10-14): race(Black vs White)                  1.44  [1.13;1.83]   0.00303 </span></span>
+<span id="cb3-30"><a href="#cb3-30"></a><span class="co">#&gt;          exposure.cat(Started at 10-14): race(Hispanic vs White)                  0.78  [0.55;1.10]   0.14920 </span></span>
+<span id="cb3-31"><a href="#cb3-31"></a><span class="co">#&gt;            exposure.cat(Started at 10-14): race(Others vs White)                  1.44  [0.88;2.35]   0.14422 </span></span>
+<span id="cb3-32"><a href="#cb3-32"></a><span class="co">#&gt;             exposure.cat(Started at 15-17): race(Black vs White)                  1.43  [1.23;1.67]   &lt; 0.001 </span></span>
+<span id="cb3-33"><a href="#cb3-33"></a><span class="co">#&gt;          exposure.cat(Started at 15-17): race(Hispanic vs White)                  0.89  [0.69;1.15]   0.35784 </span></span>
+<span id="cb3-34"><a href="#cb3-34"></a><span class="co">#&gt;            exposure.cat(Started at 15-17): race(Others vs White)                  1.57  [1.07;2.30]   0.02207 </span></span>
+<span id="cb3-35"><a href="#cb3-35"></a><span class="co">#&gt;             exposure.cat(Started at 18-20): race(Black vs White)                  1.72  [1.40;2.10]   &lt; 0.001 </span></span>
+<span id="cb3-36"><a href="#cb3-36"></a><span class="co">#&gt;          exposure.cat(Started at 18-20): race(Hispanic vs White)                  1.05  [0.83;1.32]   0.70369 </span></span>
+<span id="cb3-37"><a href="#cb3-37"></a><span class="co">#&gt;            exposure.cat(Started at 18-20): race(Others vs White)                  0.96  [0.62;1.50]   0.86329 </span></span>
+<span id="cb3-38"><a href="#cb3-38"></a><span class="co">#&gt;             exposure.cat(Started after 20): race(Black vs White)                  1.32  [1.07;1.61]   0.00811 </span></span>
+<span id="cb3-39"><a href="#cb3-39"></a><span class="co">#&gt;          exposure.cat(Started after 20): race(Hispanic vs White)                  0.98  [0.77;1.24]   0.85155 </span></span>
+<span id="cb3-40"><a href="#cb3-40"></a><span class="co">#&gt;            exposure.cat(Started after 20): race(Others vs White)                  0.77  [0.54;1.10]   0.14624 </span></span>
+<span id="cb3-41"><a href="#cb3-41"></a><span class="co">#&gt;     race(White): exposure.cat(Started before 10 vs Never smoked)                  3.13  [2.27;4.31]   &lt; 0.001 </span></span>
+<span id="cb3-42"><a href="#cb3-42"></a><span class="co">#&gt;      race(White): exposure.cat(Started at 10-14 vs Never smoked)                  2.53  [2.16;2.97]   &lt; 0.001 </span></span>
+<span id="cb3-43"><a href="#cb3-43"></a><span class="co">#&gt;      race(White): exposure.cat(Started at 15-17 vs Never smoked)                  2.06  [1.84;2.31]   &lt; 0.001 </span></span>
+<span id="cb3-44"><a href="#cb3-44"></a><span class="co">#&gt;      race(White): exposure.cat(Started at 18-20 vs Never smoked)                  1.53  [1.35;1.74]   &lt; 0.001 </span></span>
+<span id="cb3-45"><a href="#cb3-45"></a><span class="co">#&gt;      race(White): exposure.cat(Started after 20 vs Never smoked)                  1.70  [1.50;1.92]   &lt; 0.001 </span></span>
+<span id="cb3-46"><a href="#cb3-46"></a><span class="co">#&gt;     race(Black): exposure.cat(Started before 10 vs Never smoked)                  1.91  [0.99;3.69]   0.05438 </span></span>
+<span id="cb3-47"><a href="#cb3-47"></a><span class="co">#&gt;      race(Black): exposure.cat(Started at 10-14 vs Never smoked)                  2.00  [1.65;2.42]   &lt; 0.001 </span></span>
+<span id="cb3-48"><a href="#cb3-48"></a><span class="co">#&gt;      race(Black): exposure.cat(Started at 15-17 vs Never smoked)                  1.62  [1.37;1.92]   &lt; 0.001 </span></span>
+<span id="cb3-49"><a href="#cb3-49"></a><span class="co">#&gt;      race(Black): exposure.cat(Started at 18-20 vs Never smoked)                  1.45  [1.20;1.75]   &lt; 0.001 </span></span>
+<span id="cb3-50"><a href="#cb3-50"></a><span class="co">#&gt;      race(Black): exposure.cat(Started after 20 vs Never smoked)                  1.22  [1.03;1.46]   0.02524 </span></span>
+<span id="cb3-51"><a href="#cb3-51"></a><span class="co">#&gt;  race(Hispanic): exposure.cat(Started before 10 vs Never smoked)                  1.00  [0.47;2.15]   0.99907 </span></span>
+<span id="cb3-52"><a href="#cb3-52"></a><span class="co">#&gt;   race(Hispanic): exposure.cat(Started at 10-14 vs Never smoked)                  1.58  [1.22;2.05]   &lt; 0.001 </span></span>
+<span id="cb3-53"><a href="#cb3-53"></a><span class="co">#&gt;   race(Hispanic): exposure.cat(Started at 15-17 vs Never smoked)                  1.47  [1.08;2.00]   0.01433 </span></span>
+<span id="cb3-54"><a href="#cb3-54"></a><span class="co">#&gt;   race(Hispanic): exposure.cat(Started at 18-20 vs Never smoked)                  1.29  [1.00;1.67]   0.04860 </span></span>
+<span id="cb3-55"><a href="#cb3-55"></a><span class="co">#&gt;   race(Hispanic): exposure.cat(Started after 20 vs Never smoked)                  1.33  [1.00;1.78]   0.04861 </span></span>
+<span id="cb3-56"><a href="#cb3-56"></a><span class="co">#&gt;    race(Others): exposure.cat(Started before 10 vs Never smoked)                  4.51 [1.87;10.87]   &lt; 0.001 </span></span>
+<span id="cb3-57"><a href="#cb3-57"></a><span class="co">#&gt;     race(Others): exposure.cat(Started at 10-14 vs Never smoked)                  3.01  [1.81;5.02]   &lt; 0.001 </span></span>
+<span id="cb3-58"><a href="#cb3-58"></a><span class="co">#&gt;     race(Others): exposure.cat(Started at 15-17 vs Never smoked)                  2.67  [1.73;4.10]   &lt; 0.001 </span></span>
+<span id="cb3-59"><a href="#cb3-59"></a><span class="co">#&gt;     race(Others): exposure.cat(Started at 18-20 vs Never smoked)                  1.22  [0.74;2.00]   0.43325 </span></span>
+<span id="cb3-60"><a href="#cb3-60"></a><span class="co">#&gt;     race(Others): exposure.cat(Started after 20 vs Never smoked)                  1.08  [0.70;1.66]   0.73892</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 3: Testing Race/Ethnicity Interaction (Poisson Approximation)</li>
+</ul>
+<p>The following code performs statistical tests to formally assess the significance of the interaction term between <code>exposure.cat</code> and <code>race</code>. It uses <code>svyglm</code> with a Poisson family (as an approximation to the Cox model) to allow for <code><a href="https://rdrr.io/r/stats/anova.html">anova()</a></code> comparisons, and <code>regTermTest()</code> is used to perform a Likelihood Ratio Test (LRT) directly on the interaction term. This helps determine if the observed variations in association by race are statistically significant.</p>
+<div class="cell" data-hash="09-effect-modification_cache/html/race-test_aa1c77287e381b9b96758e49f3074199">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Fit the baseline Poisson model (no interaction)</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>fit1a <span class="ot">&lt;-</span> <span class="fu">svyglm</span>(status_all <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(stime.since.birth)) <span class="sc">+</span> </span>
+<span id="cb4-3"><a href="#cb4-3"></a>                  exposure.cat <span class="sc">+</span> race <span class="sc">+</span> sex  <span class="sc">+</span> year.cat,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>                <span class="at">design =</span> w.design0, <span class="at">family=</span>poisson)</span>
+<span id="cb4-5"><a href="#cb4-5"></a></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co"># Fit the full Poisson model (with interaction)</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>fit2a <span class="ot">&lt;-</span> <span class="fu">svyglm</span>(status_all <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(stime.since.birth)) <span class="sc">+</span> </span>
+<span id="cb4-8"><a href="#cb4-8"></a>                  exposure.cat<span class="sc">*</span>race <span class="sc">+</span> sex  <span class="sc">+</span> year.cat,</span>
+<span id="cb4-9"><a href="#cb4-9"></a>                <span class="at">design =</span> w.design0, <span class="at">family=</span>poisson)</span>
+<span id="cb4-10"><a href="#cb4-10"></a></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="co"># Compare the two models using a Rao-Scott test (via anova)</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="fu">anova</span>(fit2a,fit1a)</span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="co">#&gt; Working (Rao-Scott+F) LRT for exposure.cat:race</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="co">#&gt;  in svyglm(formula = status_all ~ offset(log(stime.since.birth)) + </span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#&gt;     exposure.cat * race + sex + year.cat, design = w.design0, </span></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="co">#&gt;     family = poisson)</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="co">#&gt; Working 2logLR =  21.45753 p= 0.16075 </span></span>
+<span id="cb4-18"><a href="#cb4-18"></a><span class="co">#&gt; (scale factors:  2 1.9 1.8 1.5 1.4 0.98 0.93 0.76 0.73 0.62 0.57 0.54 0.45 0.37 0.36 );  denominator df= 120</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a></span>
+<span id="cb4-20"><a href="#cb4-20"></a><span class="co"># Directly test the interaction term using a Likelihood Ratio Test</span></span>
+<span id="cb4-21"><a href="#cb4-21"></a><span class="fu">regTermTest</span>(fit2a, <span class="at">test.terms =</span> <span class="st">"exposure.cat:race"</span>, <span class="at">method =</span> <span class="st">"LRT"</span>)</span>
+<span id="cb4-22"><a href="#cb4-22"></a><span class="co">#&gt; Working (Rao-Scott+F) LRT for exposure.cat:race</span></span>
+<span id="cb4-23"><a href="#cb4-23"></a><span class="co">#&gt;  in svyglm(formula = status_all ~ offset(log(stime.since.birth)) + </span></span>
+<span id="cb4-24"><a href="#cb4-24"></a><span class="co">#&gt;     exposure.cat * race + sex + year.cat, design = w.design0, </span></span>
+<span id="cb4-25"><a href="#cb4-25"></a><span class="co">#&gt;     family = poisson)</span></span>
+<span id="cb4-26"><a href="#cb4-26"></a><span class="co">#&gt; Working 2logLR =  21.45753 p= 0.16075 </span></span>
+<span id="cb4-27"><a href="#cb4-27"></a><span class="co">#&gt; (scale factors:  2 1.9 1.8 1.5 1.4 0.98 0.93 0.76 0.73 0.62 0.57 0.54 0.45 0.37 0.36 );  denominator df= 120</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 4: Process Race-Specific Hazard Ratios for Plotting</li>
+</ul>
+<p>Although the overall interaction term was not statistically significant, the original paper still presented the stratum-specific Hazard Ratios (HRs) to visualize the trends within each racial/ethnic group. So the following code extracts stratum-specific Hazard Ratios (HRs) and their 95% Confidence Intervals (CIs) for each racial/ethnic group from the <code>f2</code> object (the published output of fit2). These HRs reflect the effect of smoking initiation within each racial/ethnic stratum, allowing for a detailed examination of potential effect modification. The extracted data is formatted into a dataframe, <code>f2r</code>.</p>
+<div class="cell" data-hash="09-effect-modification_cache/html/race-HRs_286a62acfb73a1712026528ac0909f7d">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Extract HRs and CIs for each race subgroup from the published output</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>f2rW <span class="ot">&lt;-</span> f2<span class="sc">$</span>regressionTable[<span class="dv">31</span><span class="sc">:</span><span class="dv">35</span>,<span class="fu">c</span>(<span class="st">"HazardRatio"</span>,<span class="st">"CI.95"</span>)]</span>
+<span id="cb5-3"><a href="#cb5-3"></a>f2rB <span class="ot">&lt;-</span> f2<span class="sc">$</span>regressionTable[<span class="dv">36</span><span class="sc">:</span><span class="dv">40</span>,<span class="fu">c</span>(<span class="st">"HazardRatio"</span>,<span class="st">"CI.95"</span>)]</span>
+<span id="cb5-4"><a href="#cb5-4"></a>f2rH <span class="ot">&lt;-</span> f2<span class="sc">$</span>regressionTable[<span class="dv">41</span><span class="sc">:</span><span class="dv">45</span>,<span class="fu">c</span>(<span class="st">"HazardRatio"</span>,<span class="st">"CI.95"</span>)]</span>
+<span id="cb5-5"><a href="#cb5-5"></a></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="co"># Assign group labels and combine into a single data frame</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a>f2rW<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="st">"White"</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a>f2rB<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="st">"Black"</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a>f2rH<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="st">"Hispanic"</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a>f2r <span class="ot">&lt;-</span> <span class="fu">rbind</span>(f2rW, f2rB, f2rH)</span>
+<span id="cb5-11"><a href="#cb5-11"></a></span>
+<span id="cb5-12"><a href="#cb5-12"></a><span class="co"># Process CIs: Extract lower and upper bounds from the CI string</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a>ci <span class="ot">&lt;-</span> <span class="fu">str_extract_all</span>(f2r[,<span class="dv">2</span>], <span class="st">'</span><span class="sc">\\</span><span class="st">d+([.,]</span><span class="sc">\\</span><span class="st">d+)?'</span>, <span class="at">simplify =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-14"><a href="#cb5-14"></a>f2r<span class="sc">$</span>CI.l <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(ci[,<span class="dv">1</span>]))</span>
+<span id="cb5-15"><a href="#cb5-15"></a>f2r<span class="sc">$</span>CI.u <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(ci[,<span class="dv">2</span>]))</span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="fu">names</span>(f2r) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean"</span>,<span class="st">"CI.95"</span>,<span class="st">"group"</span>,<span class="st">"lower"</span>,<span class="st">"upper"</span>)</span>
+<span id="cb5-17"><a href="#cb5-17"></a></span>
+<span id="cb5-18"><a href="#cb5-18"></a><span class="co"># Display the final processed data frame</span></span>
+<span id="cb5-19"><a href="#cb5-19"></a>f2r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["mean"],"name":[1],"type":["chr"],"align":["left"]},{"label":["CI.95"],"name":[2],"type":["chr"],"align":["left"]},{"label":["group"],"name":[3],"type":["chr"],"align":["left"]},{"label":["lower"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["upper"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"3.13","2":"[2.27;4.31]","3":"White","4":"2.27","5":"4.31","_rn_":"31"},{"1":"2.53","2":"[2.16;2.97]","3":"White","4":"2.16","5":"2.97","_rn_":"32"},{"1":"2.06","2":"[1.84;2.31]","3":"White","4":"1.84","5":"2.31","_rn_":"33"},{"1":"1.53","2":"[1.35;1.74]","3":"White","4":"1.35","5":"1.74","_rn_":"34"},{"1":"1.70","2":"[1.50;1.92]","3":"White","4":"1.50","5":"1.92","_rn_":"35"},{"1":"1.91","2":"[0.99;3.69]","3":"Black","4":"0.99","5":"3.69","_rn_":"36"},{"1":"2.00","2":"[1.65;2.42]","3":"Black","4":"1.65","5":"2.42","_rn_":"37"},{"1":"1.62","2":"[1.37;1.92]","3":"Black","4":"1.37","5":"1.92","_rn_":"38"},{"1":"1.45","2":"[1.20;1.75]","3":"Black","4":"1.20","5":"1.75","_rn_":"39"},{"1":"1.22","2":"[1.03;1.46]","3":"Black","4":"1.03","5":"1.46","_rn_":"40"},{"1":"1.00","2":"[0.47;2.15]","3":"Hispanic","4":"0.47","5":"2.15","_rn_":"41"},{"1":"1.58","2":"[1.22;2.05]","3":"Hispanic","4":"1.22","5":"2.05","_rn_":"42"},{"1":"1.47","2":"[1.08;2.00]","3":"Hispanic","4":"1.08","5":"2.00","_rn_":"43"},{"1":"1.29","2":"[1.00;1.67]","3":"Hispanic","4":"1.00","5":"1.67","_rn_":"44"},{"1":"1.33","2":"[1.00;1.78]","3":"Hispanic","4":"1.00","5":"1.78","_rn_":"45"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<hr></section><section id="investigating-effect-modification-by-sex" class="level2" data-number="11.2"><h2 data-number="11.2" class="anchored" data-anchor-id="investigating-effect-modification-by-sex">
+<span class="header-section-number">11.2</span> Investigating Effect Modification by Sex</h2>
+<ul>
+<li>R Code Chunk 5: Effect Modification by Sex</li>
+</ul>
+<p>The following code fits another survey-weighted Cox proportional hazards model, this time including an interaction term between exposure.cat and sex. This model is used to investigate whether the association between early smoking initiation and mortality varies between male and female participants.</p>
+<div class="cell" data-hash="09-effect-modification_cache/html/EM-sex_7d75cb0b70108778ee35970d48644b30">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Effect modification by sex</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>fit3 <span class="ot">&lt;-</span> <span class="fu">svycoxph</span>(<span class="fu">Surv</span>(stime.since.birth, status_all) <span class="sc">~</span> exposure.cat<span class="sc">*</span>sex </span>
+<span id="cb6-3"><a href="#cb6-3"></a>                 <span class="sc">+</span> race <span class="sc">+</span> year.cat, <span class="at">design =</span> w.design0)</span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co"># Publish the results for later processing</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>f3 <span class="ot">&lt;-</span> <span class="fu">publish</span>(fit3)</span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="co">#&gt; Stratified 1 - level Cluster Sampling design (with replacement)</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co">#&gt; With (301) clusters.</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt; subset(w.design, miss == 0 &amp; survey.weight.new &gt; 0)</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="co">#&gt;                                                      Variable     Units HazardRatio       CI.95   p-value </span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="co">#&gt;                                                          race     White         Ref                       </span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co">#&gt;                                                                   Black        1.60 [1.47;1.74]   &lt; 0.001 </span></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="co">#&gt;                                                                Hispanic        1.04 [0.93;1.16]   0.51363 </span></span>
+<span id="cb6-14"><a href="#cb6-14"></a><span class="co">#&gt;                                                                  Others        1.16 [0.98;1.37]   0.09252 </span></span>
+<span id="cb6-15"><a href="#cb6-15"></a><span class="co">#&gt;                                                      year.cat 1999-2000         Ref                       </span></span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="co">#&gt;                                                               2001-2002        0.96 [0.86;1.08]   0.51741 </span></span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="co">#&gt;                                                               2003-2004        0.84 [0.74;0.94]   0.00291 </span></span>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="co">#&gt;                                                               2005-2006        0.75 [0.67;0.84]   &lt; 0.001 </span></span>
+<span id="cb6-19"><a href="#cb6-19"></a><span class="co">#&gt;                                                               2007-2008        0.77 [0.66;0.90]   &lt; 0.001 </span></span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="co">#&gt;                                                               2009-2010        0.68 [0.59;0.78]   &lt; 0.001 </span></span>
+<span id="cb6-21"><a href="#cb6-21"></a><span class="co">#&gt;                                                               2011-2012        0.62 [0.51;0.76]   &lt; 0.001 </span></span>
+<span id="cb6-22"><a href="#cb6-22"></a><span class="co">#&gt;                                                               2013-2014        0.58 [0.48;0.69]   &lt; 0.001 </span></span>
+<span id="cb6-23"><a href="#cb6-23"></a><span class="co">#&gt;                                                               2015-2016        0.35 [0.27;0.45]   &lt; 0.001 </span></span>
+<span id="cb6-24"><a href="#cb6-24"></a><span class="co">#&gt;                                                               2017-2018        0.20 [0.13;0.29]   &lt; 0.001 </span></span>
+<span id="cb6-25"><a href="#cb6-25"></a><span class="co">#&gt;               exposure.cat(Never smoked): sex(Female vs Male)                  0.67 [0.61;0.74]   &lt; 0.001 </span></span>
+<span id="cb6-26"><a href="#cb6-26"></a><span class="co">#&gt;          exposure.cat(Started before 10): sex(Female vs Male)                  0.77 [0.30;1.99]   0.58537 </span></span>
+<span id="cb6-27"><a href="#cb6-27"></a><span class="co">#&gt;           exposure.cat(Started at 10-14): sex(Female vs Male)                  1.03 [0.81;1.31]   0.80520 </span></span>
+<span id="cb6-28"><a href="#cb6-28"></a><span class="co">#&gt;           exposure.cat(Started at 15-17): sex(Female vs Male)                  0.76 [0.66;0.88]   &lt; 0.001 </span></span>
+<span id="cb6-29"><a href="#cb6-29"></a><span class="co">#&gt;           exposure.cat(Started at 18-20): sex(Female vs Male)                  0.73 [0.62;0.87]   &lt; 0.001 </span></span>
+<span id="cb6-30"><a href="#cb6-30"></a><span class="co">#&gt;           exposure.cat(Started after 20): sex(Female vs Male)                  0.78 [0.67;0.90]   &lt; 0.001 </span></span>
+<span id="cb6-31"><a href="#cb6-31"></a><span class="co">#&gt;    sex(Male): exposure.cat(Started before 10 vs Never smoked)                  2.54 [1.86;3.47]   &lt; 0.001 </span></span>
+<span id="cb6-32"><a href="#cb6-32"></a><span class="co">#&gt;     sex(Male): exposure.cat(Started at 10-14 vs Never smoked)                  2.05 [1.81;2.32]   &lt; 0.001 </span></span>
+<span id="cb6-33"><a href="#cb6-33"></a><span class="co">#&gt;     sex(Male): exposure.cat(Started at 15-17 vs Never smoked)                  1.83 [1.61;2.09]   &lt; 0.001 </span></span>
+<span id="cb6-34"><a href="#cb6-34"></a><span class="co">#&gt;     sex(Male): exposure.cat(Started at 18-20 vs Never smoked)                  1.40 [1.22;1.61]   &lt; 0.001 </span></span>
+<span id="cb6-35"><a href="#cb6-35"></a><span class="co">#&gt;     sex(Male): exposure.cat(Started after 20 vs Never smoked)                  1.42 [1.22;1.64]   &lt; 0.001 </span></span>
+<span id="cb6-36"><a href="#cb6-36"></a><span class="co">#&gt;  sex(Female): exposure.cat(Started before 10 vs Never smoked)                  2.90 [1.21;6.92]   0.01677 </span></span>
+<span id="cb6-37"><a href="#cb6-37"></a><span class="co">#&gt;   sex(Female): exposure.cat(Started at 10-14 vs Never smoked)                  3.15 [2.49;3.97]   &lt; 0.001 </span></span>
+<span id="cb6-38"><a href="#cb6-38"></a><span class="co">#&gt;   sex(Female): exposure.cat(Started at 15-17 vs Never smoked)                  2.07 [1.81;2.37]   &lt; 0.001 </span></span>
+<span id="cb6-39"><a href="#cb6-39"></a><span class="co">#&gt;   sex(Female): exposure.cat(Started at 18-20 vs Never smoked)                  1.53 [1.32;1.78]   &lt; 0.001 </span></span>
+<span id="cb6-40"><a href="#cb6-40"></a><span class="co">#&gt;   sex(Female): exposure.cat(Started after 20 vs Never smoked)                  1.63 [1.44;1.85]   &lt; 0.001</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 6: Testing Sex Interaction (Poisson Approximation and AIC)</li>
+</ul>
+<p>Similar to the race interaction, we now formally test the significance of the interaction between smoking initiation and sex. We use the same Poisson approximation approach to compare the model with the interaction term (<code>fit3a</code>) against the baseline model without it (<code>fit1a</code>).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Akaike Information Criterion (AIC) is calculated for this model and compared with previous models to evaluate overall model fit, as discussed in the paper. A lower AIC value indicates a better model fit. The paper reports that the sex interaction was statistically significant (p=0.001) and that this model provided a superior fit (lower AIC) compared to the others.</p>
+</div>
+</div>
+<div class="cell" data-hash="09-effect-modification_cache/html/sex-test_936380fa7fd1e21addd0ff0e44095a91">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Fit the full Poisson model (with sex interaction)</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>fit3a <span class="ot">&lt;-</span> <span class="fu">svyglm</span>(status_all <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(stime.since.birth)) <span class="sc">+</span> </span>
+<span id="cb7-3"><a href="#cb7-3"></a>                  exposure.cat<span class="sc">*</span>sex <span class="sc">+</span> race <span class="sc">+</span> year.cat,</span>
+<span id="cb7-4"><a href="#cb7-4"></a>                <span class="at">design =</span> w.design0, <span class="at">family=</span>poisson)</span>
+<span id="cb7-5"><a href="#cb7-5"></a></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="co"># Compare the sex-interaction model to the baseline model (fit1a)</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="fu">anova</span>(fit3a,fit1a) </span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co">#&gt; Working (Rao-Scott+F) LRT for exposure.cat:sex</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="co">#&gt;  in svyglm(formula = status_all ~ offset(log(stime.since.birth)) + </span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="co">#&gt;     exposure.cat * sex + race + year.cat, design = w.design0, </span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="co">#&gt;     family = poisson)</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a><span class="co">#&gt; Working 2logLR =  21.44332 p= 0.0014171 </span></span>
+<span id="cb7-13"><a href="#cb7-13"></a><span class="co">#&gt; (scale factors:  1.2 1.1 1 0.87 0.76 );  denominator df= 130</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a></span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="co"># Directly test the interaction term</span></span>
+<span id="cb7-16"><a href="#cb7-16"></a><span class="fu">regTermTest</span>(fit3a, <span class="at">test.terms =</span> <span class="st">"exposure.cat:sex"</span>, <span class="at">method =</span> <span class="st">"LRT"</span>)</span>
+<span id="cb7-17"><a href="#cb7-17"></a><span class="co">#&gt; Working (Rao-Scott+F) LRT for exposure.cat:sex</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a><span class="co">#&gt;  in svyglm(formula = status_all ~ offset(log(stime.since.birth)) + </span></span>
+<span id="cb7-19"><a href="#cb7-19"></a><span class="co">#&gt;     exposure.cat * sex + race + year.cat, design = w.design0, </span></span>
+<span id="cb7-20"><a href="#cb7-20"></a><span class="co">#&gt;     family = poisson)</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="co">#&gt; Working 2logLR =  21.44332 p= 0.0014171 </span></span>
+<span id="cb7-22"><a href="#cb7-22"></a><span class="co">#&gt; (scale factors:  1.2 1.1 1 0.87 0.76 );  denominator df= 130</span></span>
+<span id="cb7-23"><a href="#cb7-23"></a></span>
+<span id="cb7-24"><a href="#cb7-24"></a><span class="co"># Compare AIC values across all three models for overall fit</span></span>
+<span id="cb7-25"><a href="#cb7-25"></a><span class="fu">AIC</span>(fit1a, fit2a, fit3a)</span>
+<span id="cb7-26"><a href="#cb7-26"></a><span class="co">#&gt;         eff.p      AIC deltabar</span></span>
+<span id="cb7-27"><a href="#cb7-27"></a><span class="co">#&gt; [1,] 24.73244 17872.62 1.374024</span></span>
+<span id="cb7-28"><a href="#cb7-28"></a><span class="co">#&gt; [2,] 34.63283 17878.17 1.049480</span></span>
+<span id="cb7-29"><a href="#cb7-29"></a><span class="co">#&gt; [3,] 30.80173 17858.35 1.339206</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 7: Process Sex-Specific Hazard Ratios for Plotting</li>
+</ul>
+<p>The following code extracts the Hazard Ratios (HRs) and their 95% Confidence Intervals (CIs) for both male and female subgroups from the <code>f3</code> object (the published output of fit3). These HRs reflect the effect of smoking initiation within each sex level The extracted data is formatted into data frame, <code>f3r</code>.</p>
+<div class="cell" data-hash="09-effect-modification_cache/html/sex-HRs_e618d0a6ec49dddc23bc5fdc73a3d771">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Extract HRs and CIs for male and female subgroups from the published output</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>f3rM <span class="ot">&lt;-</span> f3<span class="sc">$</span>regressionTable[<span class="dv">21</span><span class="sc">:</span><span class="dv">25</span>,<span class="fu">c</span>(<span class="st">"HazardRatio"</span>,<span class="st">"CI.95"</span>)]</span>
+<span id="cb8-3"><a href="#cb8-3"></a>f3rF <span class="ot">&lt;-</span> f3<span class="sc">$</span>regressionTable[<span class="dv">26</span><span class="sc">:</span><span class="dv">30</span>,<span class="fu">c</span>(<span class="st">"HazardRatio"</span>,<span class="st">"CI.95"</span>)]</span>
+<span id="cb8-4"><a href="#cb8-4"></a></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co"># Assign group labels and combine into a single data frame</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a>f3rM<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="st">"Male"</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a>f3rF<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="st">"Female"</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a>f3r <span class="ot">&lt;-</span> <span class="fu">rbind</span>(f3rM, f3rF)</span>
+<span id="cb8-9"><a href="#cb8-9"></a></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="co"># Process CIs: Extract lower and upper bounds from the CI string</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a>ci <span class="ot">&lt;-</span> <span class="fu">str_extract_all</span>(f3r[,<span class="dv">2</span>], <span class="st">'</span><span class="sc">\\</span><span class="st">d+([.,]</span><span class="sc">\\</span><span class="st">d+)?'</span>, <span class="at">simplify =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-12"><a href="#cb8-12"></a>f3r<span class="sc">$</span>CI.l <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(ci[,<span class="dv">1</span>]))</span>
+<span id="cb8-13"><a href="#cb8-13"></a>f3r<span class="sc">$</span>CI.u <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(ci[,<span class="dv">2</span>]))</span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="fu">names</span>(f3r) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean"</span>,<span class="st">"CI.95"</span>,<span class="st">"group"</span>,<span class="st">"lower"</span>,<span class="st">"upper"</span>)</span>
+<span id="cb8-15"><a href="#cb8-15"></a></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="co"># Display the final processed data frame</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a>f3r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["mean"],"name":[1],"type":["chr"],"align":["left"]},{"label":["CI.95"],"name":[2],"type":["chr"],"align":["left"]},{"label":["group"],"name":[3],"type":["chr"],"align":["left"]},{"label":["lower"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["upper"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"2.54","2":"[1.86;3.47]","3":"Male","4":"1.86","5":"3.47","_rn_":"21"},{"1":"2.05","2":"[1.81;2.32]","3":"Male","4":"1.81","5":"2.32","_rn_":"22"},{"1":"1.83","2":"[1.61;2.09]","3":"Male","4":"1.61","5":"2.09","_rn_":"23"},{"1":"1.40","2":"[1.22;1.61]","3":"Male","4":"1.22","5":"1.61","_rn_":"24"},{"1":"1.42","2":"[1.22;1.64]","3":"Male","4":"1.22","5":"1.64","_rn_":"25"},{"1":"2.90","2":"[1.21;6.92]","3":"Female","4":"1.21","5":"6.92","_rn_":"26"},{"1":"3.15","2":"[2.49;3.97]","3":"Female","4":"2.49","5":"3.97","_rn_":"27"},{"1":"2.07","2":"[1.81;2.37]","3":"Female","4":"1.81","5":"2.37","_rn_":"28"},{"1":"1.53","2":"[1.32;1.78]","3":"Female","4":"1.32","5":"1.78","_rn_":"29"},{"1":"1.63","2":"[1.44;1.85]","3":"Female","4":"1.44","5":"1.85","_rn_":"30"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<hr></section><section id="visualizing-the-results-figure-2" class="level2" data-number="11.3"><h2 data-number="11.3" class="anchored" data-anchor-id="visualizing-the-results-figure-2">
+<span class="header-section-number">11.3</span> Visualizing the Results (Figure 2)</h2>
+<ul>
+<li>R Code Chunk 8: Forest Plot Visualization of Hazard Ratios</li>
+</ul>
+<p>The following code prepares the data for the comprehensive forest plot. It binds together the Hazard Ratios from the crude (<code>f0r</code>), adjusted (<code>f1r</code>), race-specific (<code>f2r</code>), and sex-specific (<code>f3r</code>) models into a single data frame fr. It then converts relevant columns to numeric types and assigns descriptive labels (<code>age.grp</code>).</p>
+<div class="cell" data-hash="09-effect-modification_cache/html/all-bind_a870f0155f20ef335b368c0b891cccab">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Bind all processed HR data frames and set as data frame</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>fr <span class="ot">&lt;-</span> <span class="fu">rbind</span>(f0r,f1r,f2r,f3r)</span>
+<span id="cb9-3"><a href="#cb9-3"></a>fr <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(fr)</span>
+<span id="cb9-4"><a href="#cb9-4"></a></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="co"># Convert to numeric columns</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a>fr[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">5</span>)] <span class="ot">&lt;-</span> <span class="fu">sapply</span>(fr[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">5</span>)], as.numeric)</span>
+<span id="cb9-7"><a href="#cb9-7"></a></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="co"># Assign 'age.grp' labels</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a>fr<span class="sc">$</span>age.grp <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'Started before 10'</span>, <span class="st">'Started at 10-14'</span>,</span>
+<span id="cb9-10"><a href="#cb9-10"></a>                <span class="st">"Started at 15-17"</span>, <span class="st">"Started at 18-20"</span>,</span>
+<span id="cb9-11"><a href="#cb9-11"></a>                <span class="st">"Started after 20"</span>)</span>
+<span id="cb9-12"><a href="#cb9-12"></a></span>
+<span id="cb9-13"><a href="#cb9-13"></a><span class="co"># Save the final plotting dataframe</span></span>
+<span id="cb9-14"><a href="#cb9-14"></a><span class="fu">saveRDS</span>(fr, <span class="at">file =</span> <span class="st">"data/fr.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The following code uses the <code>ggplot2</code> package to visualize the comprehensive forest plot with the estimated Hazard Ratios and their 95% Confidence Intervals from all models (crude, adjusted, and subgroup-specific). This corresponds to Figure 2 in the published paper.</p>
+<div class="cell" data-hash="09-effect-modification_cache/html/forestplotting_341972e5a4e6fbac1eb12f270504c3b8">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Set factor levels for correct ordering in the plot</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>fr<span class="sc">$</span>age.grp <span class="ot">&lt;-</span> <span class="fu">factor</span>(fr<span class="sc">$</span>age.grp,</span>
+<span id="cb10-3"><a href="#cb10-3"></a>                     <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">'Started before 10'</span>,</span>
+<span id="cb10-4"><a href="#cb10-4"></a>                                <span class="st">'Started at 10-14'</span>,<span class="st">"Started at 15-17"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5"></a>                                <span class="st">"Started at 18-20"</span>,<span class="st">"Started after 20"</span>))</span>
+<span id="cb10-6"><a href="#cb10-6"></a>fr<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">factor</span>(fr<span class="sc">$</span>group,</span>
+<span id="cb10-7"><a href="#cb10-7"></a>                     <span class="at">levels =</span> <span class="fu">rev</span>(<span class="fu">c</span>(<span class="st">"Crude"</span>, <span class="st">"Adjusted"</span>, </span>
+<span id="cb10-8"><a href="#cb10-8"></a>                                <span class="st">"White"</span>, <span class="st">"Black"</span>, <span class="st">"Hispanic"</span>, </span>
+<span id="cb10-9"><a href="#cb10-9"></a>                                <span class="st">"Male"</span>, <span class="st">"Female"</span>)))</span>
+<span id="cb10-10"><a href="#cb10-10"></a></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="fu">levels</span>(fr<span class="sc">$</span>group)[<span class="fu">levels</span>(fr<span class="sc">$</span>group) <span class="sc">==</span> <span class="st">"White"</span>] <span class="ot">&lt;-</span> <span class="st">"Non-Hispanic White"</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a><span class="fu">levels</span>(fr<span class="sc">$</span>group)[<span class="fu">levels</span>(fr<span class="sc">$</span>group) <span class="sc">==</span> <span class="st">"Black"</span>] <span class="ot">&lt;-</span> <span class="st">"Non-Hispanic Black"</span></span>
+<span id="cb10-13"><a href="#cb10-13"></a>fr<span class="sc">$</span>text_label <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"%.2f [%.2f;%.2f]"</span>, fr<span class="sc">$</span>mean, fr<span class="sc">$</span>lower, fr<span class="sc">$</span>upper)</span>
+<span id="cb10-14"><a href="#cb10-14"></a></span>
+<span id="cb10-15"><a href="#cb10-15"></a><span class="co"># Create plot</span></span>
+<span id="cb10-16"><a href="#cb10-16"></a><span class="fu">ggplot</span>(fr, </span>
+<span id="cb10-17"><a href="#cb10-17"></a>       <span class="fu">aes</span>(<span class="at">x =</span> mean, <span class="at">y =</span> group, <span class="at">colour =</span> age.grp)) <span class="sc">+</span> </span>
+<span id="cb10-18"><a href="#cb10-18"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> lower, <span class="at">xmax =</span> upper), </span>
+<span id="cb10-19"><a href="#cb10-19"></a>                <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.25</span>) <span class="sc">+</span> </span>
+<span id="cb10-20"><a href="#cb10-20"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="fl">0.9</span>), <span class="at">shape =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb10-21"><a href="#cb10-21"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> text_label, <span class="at">x =</span> upper, <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.05</span>), </span>
+<span id="cb10-22"><a href="#cb10-22"></a>            <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="fl">0.9</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb10-23"><a href="#cb10-23"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">9</span>)) <span class="sc">+</span></span>
+<span id="cb10-24"><a href="#cb10-24"></a>  </span>
+<span id="cb10-25"><a href="#cb10-25"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Hazard Ratio"</span>, <span class="at">y =</span> <span class="st">""</span>, </span>
+<span id="cb10-26"><a href="#cb10-26"></a>       <span class="at">legend=</span><span class="cn">TRUE</span>, <span class="at">col =</span> <span class="st">"Age group"</span>) <span class="sc">+</span></span>
+<span id="cb10-27"><a href="#cb10-27"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb10-28"><a href="#cb10-28"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-29"><a href="#cb10-29"></a>        <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-30"><a href="#cb10-30"></a>        <span class="at">legend.title=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>), </span>
+<span id="cb10-31"><a href="#cb10-31"></a>        <span class="at">legend.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb10-32"><a href="#cb10-32"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb10-33"><a href="#cb10-33"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb10-34"><a href="#cb10-34"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb10-35"><a href="#cb10-35"></a>        <span class="at">legend.position=</span><span class="fu">c</span>(.<span class="dv">8</span>, .<span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb10-36"><a href="#cb10-36"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"grey"</span>)<span class="sc">+</span></span>
+<span id="cb10-37"><a href="#cb10-37"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">shape =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">1</span>)))</span>
+<span id="cb10-38"><a href="#cb10-38"></a><span class="co">#&gt; Warning: A numeric `legend.position` argument in `theme()` was deprecated in ggplot2</span></span>
+<span id="cb10-39"><a href="#cb10-39"></a><span class="co">#&gt; 3.5.0.</span></span>
+<span id="cb10-40"><a href="#cb10-40"></a><span class="co">#&gt; ℹ Please use the `legend.position.inside` argument of `theme()` instead.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="09-effect-modification_files/figure-html/forestplotting-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Forest plot summarizing Hazard Ratios (HRs) for all-cause mortality associated with age of smoking initiation. Results from the crude, main adjusted, and stratified models (by race/ethnicity and sex) are shown. This plot reproduces Figure 2 from the paper.</figcaption></figure>
+</div>
+</div>
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Save</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="fu">ggsave</span>(<span class="st">"images/forest.png"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="co">#&gt; Saving 7 x 5 in image</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr></section><section id="quantifying-additive-interaction-reri" class="level2" data-number="11.4"><h2 data-number="11.4" class="anchored" data-anchor-id="quantifying-additive-interaction-reri">
+<span class="header-section-number">11.4</span> Quantifying Additive Interaction (RERI)</h2>
+<ul>
+<li>R Code Chunk 9: Relative Excess Risk Due to Interaction (RERI) Function</li>
+</ul>
+<p>The following code creates the <code>reri.f</code> function which calculates the relative excess risk due to interaction (RERI). RERI is a common measure of additive interaction, providing insight into whether the combined effect of two factors is greater than the sum of their individual effects. The function computes the RERI estimate and its confidence interval based on the delta method, accounting for the variance and covariance of the estimated coefficients.</p>
+<div class="cell" data-hash="09-effect-modification_cache/html/RERI-function_e6f4eb7411172a2bf33a0f50bd01bc45">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>reri.f <span class="ot">&lt;-</span> <span class="cf">function</span>(model, coef, <span class="at">conf.level =</span> <span class="fl">0.95</span>){</span>
+<span id="cb12-2"><a href="#cb12-2"></a>  N. <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> ((<span class="dv">1</span> <span class="sc">-</span> conf.level)<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb12-3"><a href="#cb12-3"></a>  z <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(N., <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb12-4"><a href="#cb12-4"></a>  theta1 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(model<span class="sc">$</span>coefficients[coef[<span class="dv">1</span>]])</span>
+<span id="cb12-5"><a href="#cb12-5"></a>  theta2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(model<span class="sc">$</span>coefficients[coef[<span class="dv">2</span>]])</span>
+<span id="cb12-6"><a href="#cb12-6"></a>  theta3 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(model<span class="sc">$</span>coefficients[coef[<span class="dv">3</span>]])</span>
+<span id="cb12-7"><a href="#cb12-7"></a>  theta1.se <span class="ot">&lt;-</span> <span class="fu">summary</span>(model)<span class="sc">$</span>coefficients[coef[<span class="dv">1</span>],<span class="dv">2</span>]</span>
+<span id="cb12-8"><a href="#cb12-8"></a>  theta2.se <span class="ot">&lt;-</span> <span class="fu">summary</span>(model)<span class="sc">$</span>coefficients[coef[<span class="dv">2</span>],<span class="dv">2</span>]</span>
+<span id="cb12-9"><a href="#cb12-9"></a>  theta3.se <span class="ot">&lt;-</span> <span class="fu">summary</span>(model)<span class="sc">$</span>coefficients[coef[<span class="dv">3</span>],<span class="dv">2</span>]</span>
+<span id="cb12-10"><a href="#cb12-10"></a>  </span>
+<span id="cb12-11"><a href="#cb12-11"></a>  cov.mat <span class="ot">&lt;-</span> <span class="fu">vcov</span>(model)</span>
+<span id="cb12-12"><a href="#cb12-12"></a>  h1 <span class="ot">&lt;-</span> <span class="fu">exp</span>(theta1 <span class="sc">+</span> theta2 <span class="sc">+</span> theta3) <span class="sc">-</span> <span class="fu">exp</span>(theta1)</span>
+<span id="cb12-13"><a href="#cb12-13"></a>  h2 <span class="ot">&lt;-</span> <span class="fu">exp</span>(theta1 <span class="sc">+</span> theta2 <span class="sc">+</span> theta3) <span class="sc">-</span> <span class="fu">exp</span>(theta2)</span>
+<span id="cb12-14"><a href="#cb12-14"></a>  h3 <span class="ot">&lt;-</span> <span class="fu">exp</span>(theta1 <span class="sc">+</span> theta2 <span class="sc">+</span> theta3)</span>
+<span id="cb12-15"><a href="#cb12-15"></a>     </span>
+<span id="cb12-16"><a href="#cb12-16"></a>  reri.var <span class="ot">&lt;-</span> (h1<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> theta1.se<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb12-17"><a href="#cb12-17"></a>       (h2<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> theta2.se<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb12-18"><a href="#cb12-18"></a>       (h3<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> theta3.se<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb12-19"><a href="#cb12-19"></a>       (<span class="dv">2</span> <span class="sc">*</span> h1 <span class="sc">*</span> h2 <span class="sc">*</span> cov.mat[coef[<span class="dv">1</span>],coef[<span class="dv">2</span>]]) <span class="sc">+</span> </span>
+<span id="cb12-20"><a href="#cb12-20"></a>       (<span class="dv">2</span> <span class="sc">*</span> h1 <span class="sc">*</span> h3 <span class="sc">*</span> cov.mat[coef[<span class="dv">1</span>],coef[<span class="dv">3</span>]]) <span class="sc">+</span> </span>
+<span id="cb12-21"><a href="#cb12-21"></a>       (<span class="dv">2</span> <span class="sc">*</span> h2 <span class="sc">*</span> h3 <span class="sc">*</span> cov.mat[coef[<span class="dv">2</span>],coef[<span class="dv">3</span>]])</span>
+<span id="cb12-22"><a href="#cb12-22"></a>  reri.se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(reri.var)</span>
+<span id="cb12-23"><a href="#cb12-23"></a>  </span>
+<span id="cb12-24"><a href="#cb12-24"></a>  reri.p <span class="ot">&lt;-</span> <span class="fu">exp</span>(theta1 <span class="sc">+</span> theta2 <span class="sc">+</span> theta3) <span class="sc">-</span> <span class="fu">exp</span>(theta1) <span class="sc">-</span> <span class="fu">exp</span>(theta2) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb12-25"><a href="#cb12-25"></a>  reri.l <span class="ot">&lt;-</span> reri.p <span class="sc">-</span> (z <span class="sc">*</span> reri.se)</span>
+<span id="cb12-26"><a href="#cb12-26"></a>  reri.u <span class="ot">&lt;-</span> reri.p <span class="sc">+</span> (z <span class="sc">*</span> reri.se)</span>
+<span id="cb12-27"><a href="#cb12-27"></a>  reri <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">est =</span> reri.p, <span class="at">lower =</span> reri.l, <span class="at">upper =</span> reri.u)</span>
+<span id="cb12-28"><a href="#cb12-28"></a><span class="fu">return</span>(reri)</span>
+<span id="cb12-29"><a href="#cb12-29"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 10: Calculate and Report RERI for Sex Interaction</li>
+</ul>
+<p><strong>Corresponds to Appendix Table 5</strong></p>
+<p>The following code calculates the RERI for the interaction between smoking initiation age (<code>exposure.cat</code>) and <code>sex</code>, using the <code>fit3</code> model. The calculations are performed for each level of exposure.cat relative to its reference level. The results are presented in a table and saved to an Excel file (reriM2.xlsx).</p>
+<div class="cell" data-hash="09-effect-modification_cache/html/sex-RERI_ac423983d0b72399c3cd028cc298b8df">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Get the names of the coefficients from the sex-interaction model</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>coef.val <span class="ot">&lt;-</span> <span class="fu">names</span>(fit3<span class="sc">$</span>coefficients)</span>
+<span id="cb13-3"><a href="#cb13-3"></a></span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="co"># Define the active (non-reference) levels for exposure and the moderator (sex)</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a>exp.active.lev <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"exposure.cat"</span>, <span class="fu">levels</span>(w.design0<span class="sc">$</span>variables<span class="sc">$</span>exposure.cat)[<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb13-6"><a href="#cb13-6"></a>mod.active.lev <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"sex"</span>, <span class="fu">levels</span>(w.design0<span class="sc">$</span>variables<span class="sc">$</span>sex)[<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb13-7"><a href="#cb13-7"></a>int.term <span class="ot">&lt;-</span> <span class="fu">paste</span>(exp.active.lev, mod.active.lev, <span class="at">sep=</span><span class="st">":"</span>)</span>
+<span id="cb13-8"><a href="#cb13-8"></a>rr <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb13-9"><a href="#cb13-9"></a></span>
+<span id="cb13-10"><a href="#cb13-10"></a><span class="co"># Loop through each exposure level to calculate RERI</span></span>
+<span id="cb13-11"><a href="#cb13-11"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(exp.active.lev)){</span>
+<span id="cb13-12"><a href="#cb13-12"></a>  coef.val1 <span class="ot">&lt;-</span> coef.val[<span class="fu">c</span>(<span class="fu">which</span>(coef.val<span class="sc">==</span>exp.active.lev[i]),</span>
+<span id="cb13-13"><a href="#cb13-13"></a>                          <span class="fu">which</span>(coef.val<span class="sc">==</span>mod.active.lev[<span class="dv">1</span>]),</span>
+<span id="cb13-14"><a href="#cb13-14"></a>                          <span class="fu">which</span>(coef.val<span class="sc">==</span>int.term[i]))]</span>
+<span id="cb13-15"><a href="#cb13-15"></a>  r1 <span class="ot">&lt;-</span> <span class="fu">reri.f</span>(<span class="at">model=</span>fit3, <span class="at">coef=</span>coef.val1, <span class="at">conf.level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb13-16"><a href="#cb13-16"></a>  rr <span class="ot">&lt;-</span> <span class="fu">rbind</span>(rr,r1)</span>
+<span id="cb13-17"><a href="#cb13-17"></a>}</span>
+<span id="cb13-18"><a href="#cb13-18"></a></span>
+<span id="cb13-19"><a href="#cb13-19"></a><span class="co"># Assign row names for clarity</span></span>
+<span id="cb13-20"><a href="#cb13-20"></a><span class="fu">row.names</span>(rr) <span class="ot">&lt;-</span> <span class="fu">levels</span>(w.design0<span class="sc">$</span>variables<span class="sc">$</span>exposure.cat)[<span class="sc">-</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-hash="09-effect-modification_cache/html/sex-RERI-results_2991ea60158313f50059ad15251b0e8f">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>expss<span class="sc">::</span><span class="fu">xl_write_file</span>(rr, <span class="at">filename =</span> <span class="st">"data/reriM2.xlsx"</span>, <span class="at">rownames =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="fu">kable</span>(rr,</span>
+<span id="cb14-3"><a href="#cb14-3"></a>      <span class="at">booktabs =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb14-4"><a href="#cb14-4"></a>      <span class="at">caption=</span><span class="st">"Appendix Table 5: Reporting RERI for the Sex Interaction."</span>,</span>
+<span id="cb14-5"><a href="#cb14-5"></a>      <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Levels"</span>, <span class="st">"RERI"</span>, <span class="st">"Lower CI"</span>, <span class="st">"Upper CI"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb14-6"><a href="#cb14-6"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">"hold_position"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Appendix Table 5: Reporting RERI for the Sex Interaction.</caption>
+<thead><tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Levels</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RERI</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Lower CI</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Upper CI</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Started before 10</td>
+<td style="text-align: right;">-0.26</td>
+<td style="text-align: right;">-5.80</td>
+<td style="text-align: right;">5.27</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Started at 10-14</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">-6.24</td>
+<td style="text-align: right;">7.02</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Started at 15-17</td>
+<td style="text-align: right;">-0.12</td>
+<td style="text-align: right;">-3.70</td>
+<td style="text-align: right;">3.47</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Started at 18-20</td>
+<td style="text-align: right;">-0.04</td>
+<td style="text-align: right;">-2.52</td>
+<td style="text-align: right;">2.43</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Started after 20</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">-2.69</td>
+<td style="text-align: right;">2.71</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr>
+<ul>
+<li>R Code Chunk 11: Calculate and Report RERI for Race/Ethnicity Interaction</li>
+</ul>
+<p><strong>Corresponds to Appendix Table 4</strong></p>
+<p>The following code calculates the RERI for the interaction between smoking initiation age (<code>exposure.cat</code>) and <code>race</code>, using the <code>fit2</code> model. The calculations are performed for each exposure.cat level and for each non-reference racial/ethnic group. The results are presented in a table and saved to an Excel file (reriM3.xlsx).</p>
+<div class="cell" data-hash="09-effect-modification_cache/html/race-RERI_5aa205edbe24871196b94673db0d634d">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># Get the names of the coefficients from the race-interaction model</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>coef.val <span class="ot">&lt;-</span> <span class="fu">names</span>(fit2<span class="sc">$</span>coefficients)</span>
+<span id="cb15-3"><a href="#cb15-3"></a></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="co"># Define the active (non-reference) levels for exposure and the moderator (race)</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a>exp.active.lev <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"exposure.cat"</span>, <span class="fu">levels</span>(w.design0<span class="sc">$</span>variables<span class="sc">$</span>exposure.cat)[<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb15-6"><a href="#cb15-6"></a>rmx <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a></span>
+<span id="cb15-8"><a href="#cb15-8"></a><span class="co"># Outer loop: iterate through each non-reference race category</span></span>
+<span id="cb15-9"><a href="#cb15-9"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">levels</span>(w.design0<span class="sc">$</span>variables<span class="sc">$</span>race)[<span class="sc">-</span><span class="dv">1</span>])){</span>
+<span id="cb15-10"><a href="#cb15-10"></a>  mod.active.lev.j <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"race"</span>, <span class="fu">levels</span>(w.design0<span class="sc">$</span>variables<span class="sc">$</span>race)[<span class="sc">-</span><span class="dv">1</span>])[j]</span>
+<span id="cb15-11"><a href="#cb15-11"></a>  int.term <span class="ot">&lt;-</span> <span class="fu">paste</span>(exp.active.lev, mod.active.lev.j, <span class="at">sep=</span><span class="st">":"</span>)</span>
+<span id="cb15-12"><a href="#cb15-12"></a>  </span>
+<span id="cb15-13"><a href="#cb15-13"></a>  <span class="co"># Inner loop: iterate through each non-reference exposure category</span></span>
+<span id="cb15-14"><a href="#cb15-14"></a>  rr <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb15-15"><a href="#cb15-15"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(exp.active.lev)){</span>
+<span id="cb15-16"><a href="#cb15-16"></a>    coef.val1 <span class="ot">&lt;-</span> coef.val[<span class="fu">c</span>(<span class="fu">which</span>(coef.val<span class="sc">==</span>exp.active.lev[i]),</span>
+<span id="cb15-17"><a href="#cb15-17"></a>                          <span class="fu">which</span>(coef.val<span class="sc">==</span>mod.active.lev[<span class="dv">1</span>]),</span>
+<span id="cb15-18"><a href="#cb15-18"></a>                          <span class="fu">which</span>(coef.val<span class="sc">==</span>int.term[i]))]</span>
+<span id="cb15-19"><a href="#cb15-19"></a>    r1 <span class="ot">&lt;-</span> <span class="fu">reri.f</span>(<span class="at">model=</span>fit2, <span class="at">coef=</span>coef.val1, <span class="at">conf.level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb15-20"><a href="#cb15-20"></a>    rr <span class="ot">&lt;-</span> <span class="fu">rbind</span>(rr,r1)</span>
+<span id="cb15-21"><a href="#cb15-21"></a>  }</span>
+<span id="cb15-22"><a href="#cb15-22"></a>  <span class="fu">row.names</span>(rr) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">levels</span>(w.design0<span class="sc">$</span>variables<span class="sc">$</span>exposure.cat)[<span class="sc">-</span><span class="dv">1</span>], </span>
+<span id="cb15-23"><a href="#cb15-23"></a>                         <span class="fu">levels</span>(w.design0<span class="sc">$</span>variables<span class="sc">$</span>race)[<span class="sc">-</span><span class="dv">1</span>][j])</span>
+<span id="cb15-24"><a href="#cb15-24"></a>  rmx <span class="ot">&lt;-</span> <span class="fu">rbind</span>(rmx,rr)</span>
+<span id="cb15-25"><a href="#cb15-25"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-hash="09-effect-modification_cache/html/race-RERI-results_66541193ca267ee9f72508f6bb304820">
+<details><summary>Show/Hide Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>expss<span class="sc">::</span><span class="fu">xl_write_file</span>(rmx, <span class="at">filename =</span> <span class="st">"data/reriM3.xlsx"</span>, <span class="at">rownames =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="fu">kable</span>(rmx,</span>
+<span id="cb16-3"><a href="#cb16-3"></a>      <span class="at">booktabs =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb16-4"><a href="#cb16-4"></a>      <span class="at">caption=</span><span class="st">"Appendix Table 4: Reporting RERI for the Race/Ethnicity Interaction."</span>,</span>
+<span id="cb16-5"><a href="#cb16-5"></a>      <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Levels"</span>, <span class="st">"RERI"</span>, <span class="st">"Lower CI"</span>, <span class="st">"Upper CI"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="st">"hold_position"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Appendix Table 4: Reporting RERI for the Race/Ethnicity Interaction.</caption>
+<thead><tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Levels</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RERI</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Lower CI</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Upper CI</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Started before 10 Black</td>
+<td style="text-align: right;">-1.45</td>
+<td style="text-align: right;">-12.14</td>
+<td style="text-align: right;">9.24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Started at 10-14 Black</td>
+<td style="text-align: right;">-0.79</td>
+<td style="text-align: right;">-6.58</td>
+<td style="text-align: right;">5.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Started at 15-17 Black</td>
+<td style="text-align: right;">-0.60</td>
+<td style="text-align: right;">-4.58</td>
+<td style="text-align: right;">3.38</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Started at 18-20 Black</td>
+<td style="text-align: right;">-0.20</td>
+<td style="text-align: right;">-2.67</td>
+<td style="text-align: right;">2.27</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Started after 20 Black</td>
+<td style="text-align: right;">-0.53</td>
+<td style="text-align: right;">-3.45</td>
+<td style="text-align: right;">2.40</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Started before 10 Hispanic</td>
+<td style="text-align: right;">-2.13</td>
+<td style="text-align: right;">-16.78</td>
+<td style="text-align: right;">12.52</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Started at 10-14 Hispanic</td>
+<td style="text-align: right;">-1.10</td>
+<td style="text-align: right;">-8.02</td>
+<td style="text-align: right;">5.82</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Started at 15-17 Hispanic</td>
+<td style="text-align: right;">-0.71</td>
+<td style="text-align: right;">-4.94</td>
+<td style="text-align: right;">3.52</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Started at 18-20 Hispanic</td>
+<td style="text-align: right;">-0.32</td>
+<td style="text-align: right;">-2.68</td>
+<td style="text-align: right;">2.05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Started after 20 Hispanic</td>
+<td style="text-align: right;">-0.45</td>
+<td style="text-align: right;">-3.27</td>
+<td style="text-align: right;">2.37</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Started before 10 Others</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">-9.80</td>
+<td style="text-align: right;">10.76</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Started at 10-14 Others</td>
+<td style="text-align: right;">-0.04</td>
+<td style="text-align: right;">-5.88</td>
+<td style="text-align: right;">5.81</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Started at 15-17 Others</td>
+<td style="text-align: right;">0.18</td>
+<td style="text-align: right;">-5.17</td>
+<td style="text-align: right;">5.53</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Started at 18-20 Others</td>
+<td style="text-align: right;">-0.37</td>
+<td style="text-align: right;">-2.74</td>
+<td style="text-align: right;">2.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Started after 20 Others</td>
+<td style="text-align: right;">-0.64</td>
+<td style="text-align: right;">-3.78</td>
+<td style="text-align: right;">2.50</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>This concludes the main statistical analysis conducted for the published paper.</p>
+</section><section id="chapter-summary-and-next-steps" class="level2" data-number="11.5"><h2 data-number="11.5" class="anchored" data-anchor-id="chapter-summary-and-next-steps">
+<span class="header-section-number">11.5</span> Chapter Summary and Next Steps</h2>
+<p>In this chapter, we delved deeper into the analysis by investigating effect modification. We fitted interaction models and performed statistical tests to assess whether the relationship between smoking initiation and mortality was modified by race/ethnicity and sex. Our findings, particularly the significant interaction by sex, align with the conclusions of the original paper.</p>
+<p>To ensure the robustness of these findings, we will next perform “Sensitivity Analyses” to test how our results hold up when adjusting for socioeconomic factors and when analyzing a different time period.</p>
+
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./08-survival-analysis.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Survival Analysis</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./10-sensitivity-analysis.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sensitivity Analyses</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

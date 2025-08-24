@@ -1,0 +1,25 @@
+# Cohort Definition
+
+---
+
+This section details the criteria used to define the study cohort, including participant inclusion and exclusion criteria, and the approach taken to handle missing data.
+
+## Inclusion/Exclusion Criteria
+
+The study sample was derived from 10 cycles of the National Health and Nutrition Examination Surveys (NHANES), spanning from 1999 to 2018. The participants included in this study from the NHANES data were adults aged between 20 and 79 years old.
+
+Key exclusion criteria were as follows:
+
+-   Individuals younger than 20 or older than 79 years were excluded from the study.
+-   Individuals with incomplete data concerning their smoking status or mortality outcomes were also excluded.
+-   Some participants were not included in the public-use mortality files because their records lacked the minimum identifying data required for a successful linkage to the National Death Index
+
+## Missing Data Handling
+
+The study performed a complete-case analysis, meaning only participants with complete data for all variables in the main analysis were included. The final data set comprised a sample size of 50,549 individuals. A total of 275 participants (about 0.5% of the sample) were removed due to missing information on the primary exposure (smoking initiation age) or the outcome (mortality). The main covariates used in the analysis such as race/ethnicity, sex, and survey cycle had no missing values. However, other variables related to socioeconomic status, like family income ratio and education level, were not included in the primary analysis due to a high degree of missing data. The authors chose not to impute these missing values, believing that a reliable model could not be built from the available data.
+
+## Chapter Summary and Next Steps
+
+This chapter formally outlined the inclusion and exclusion criteria that defined our final study cohort of 50,549 participants. We also reviewed the complete-case approach used to handle missing data for the primary exposure and outcome variables.
+
+Now that our cohort is clearly defined, we will proceed to "Survey Design Specification," a critical step where we tell R how to correctly account for the complex sampling design of the NHANES data.
